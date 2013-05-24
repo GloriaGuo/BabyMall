@@ -4,4 +4,6 @@
     <string name="app_name">BabyMall</string>
     <string name="hello_world">Hello world!</string>
 
+    <string name="tab_words">Words</string>
+    <string name="tab_numbers">Numbers</string>
 </resources>
