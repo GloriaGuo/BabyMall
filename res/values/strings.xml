@@ -6,9 +6,9 @@
     <string name="title">Goodbaby Mall</string>
 
     <string name="back_button_text">Back</string>
-    <string name="tab_text_1">Catalogue</string>
-    <string name="tab_text_2">Profile</string>
-    <string name="tab_text_3">Home</string>
-    <string name="tab_text_4">Cart</string>
-    <string name="tab_text_5">More</string>
+    <string name="tab_text_1"></string>
+    <string name="tab_text_2"></string>
+    <string name="tab_text_3"></string>
+    <string name="tab_text_4"></string>
+    <string name="tab_text_5"></string>
 </resources>

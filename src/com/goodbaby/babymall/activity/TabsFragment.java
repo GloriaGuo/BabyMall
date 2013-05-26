@@ -11,15 +11,20 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
+import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
 
 public class TabsFragment extends Fragment implements OnTabChangeListener {
 
 	private static final String TAG = "FragmentTabs";
-	public static final String TAB_WORDS = "words";
-	public static final String TAB_NUMBERS = "numbers";
+	public static final String TAB_HOME = "home";
+	public static final String TAB_CATALOGUE = "catalogue";
+	public static final String TAB_PROFILE = "profile";
+	public static final String TAB_CART = "cart";
+	public static final String TAB_MORE = "more";
 
 	private View mRoot;
 	private TabHost mTabHost;
@@ -47,16 +52,16 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 		mTabHost.setOnTabChangedListener(this);
 		mTabHost.setCurrentTab(mCurrentTab);
 		// manually start loading stuff in the first tab
-		updateTab(TAB_WORDS, R.id.tab_1);
+		updateTab(TAB_HOME, R.id.tab_1);
 	}
 
 	private void setupTabs() {
 		mTabHost.setup(); // important!
-		mTabHost.addTab(newTab(TAB_WORDS, R.string.tab_text_1, R.id.tab_1));
-		mTabHost.addTab(newTab(TAB_NUMBERS, R.string.tab_text_2, R.id.tab_2));
-		mTabHost.addTab(newTab(TAB_WORDS, R.string.tab_text_3, R.id.tab_3));
-		mTabHost.addTab(newTab(TAB_NUMBERS, R.string.tab_text_4, R.id.tab_4));
-		mTabHost.addTab(newTab(TAB_WORDS, R.string.tab_text_5, R.id.tab_5));
+		mTabHost.addTab(newTab(TAB_CATALOGUE, R.string.tab_text_1, R.id.tab_1));
+		mTabHost.addTab(newTab(TAB_PROFILE, R.string.tab_text_2, R.id.tab_2));
+		mTabHost.addTab(newTab(TAB_HOME, R.string.tab_text_3, R.id.tab_3));
+		mTabHost.addTab(newTab(TAB_CART, R.string.tab_text_4, R.id.tab_4));
+		mTabHost.addTab(newTab(TAB_MORE, R.string.tab_text_5, R.id.tab_5));
 	}
 
 	private TabSpec newTab(String tag, int labelId, int tabContentId) {
@@ -76,13 +81,34 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 	@Override
 	public void onTabChanged(String tabId) {
 		Log.d(TAG, "onTabChanged(): tabId=" + tabId);
-		if (TAB_WORDS.equals(tabId)) {
+		TabWidget tw = (TabWidget) mRoot.findViewById(android.R.id.tabs);
+		if (TAB_CATALOGUE.equals(tabId)) {
+			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_0));
 			updateTab(tabId, R.id.tab_1);
 			mCurrentTab = 0;
 			return;
 		}
-		if (TAB_NUMBERS.equals(tabId)) {
+		if (TAB_PROFILE.equals(tabId)) {
+			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_1));
 			updateTab(tabId, R.id.tab_2);
+			mCurrentTab = 1;
+			return;
+		}
+		if (TAB_HOME.equals(tabId)) {
+			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_2));
+			updateTab(tabId, R.id.tab_3);
+			mCurrentTab = 1;
+			return;
+		}
+		if (TAB_CART.equals(tabId)) {
+			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_3));
+			updateTab(tabId, R.id.tab_4);
+			mCurrentTab = 1;
+			return;
+		}
+		if (TAB_MORE.equals(tabId)) {
+			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_4));
+			updateTab(tabId, R.id.tab_5);
 			mCurrentTab = 1;
 			return;
 		}

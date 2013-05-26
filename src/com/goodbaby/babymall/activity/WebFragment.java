@@ -46,7 +46,7 @@ public class WebFragment extends ListFragment implements
 
 	public WebFragment(String tag) {
 		mTag = tag;
-		mTotal = TabsFragment.TAB_WORDS.equals(mTag) ? WORDS.length
+		mTotal = TabsFragment.TAB_HOME.equals(mTag) ? WORDS.length
 				: NUMBERS.length;
 
 		Log.d(TAG, "Constructor: tag=" + tag);
@@ -99,7 +99,7 @@ public class WebFragment extends ListFragment implements
 
 		// add the new item and let the adapter know in order to refresh the
 		// views
-		mItems.add(TabsFragment.TAB_WORDS.equals(mTag) ? WORDS[mPosition]
+		mItems.add(TabsFragment.TAB_HOME.equals(mTag) ? WORDS[mPosition]
 				: NUMBERS[mPosition]);
 		mAdapter.notifyDataSetChanged();
 
@@ -138,7 +138,7 @@ public class WebFragment extends ListFragment implements
 
 			wrapper.getTextView().setText(getItem(position));
 			wrapper.getBar().setBackgroundColor(
-					mTag == TabsFragment.TAB_WORDS ? getResources().getColor(
+					mTag == TabsFragment.TAB_HOME ? getResources().getColor(
 							wordBarColor) : getResources().getColor(
 							numberBarColor));
 			return view;
