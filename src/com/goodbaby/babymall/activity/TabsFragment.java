@@ -8,13 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TabWidget;
-import android.widget.TextView;
 
-import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
 
 public class TabsFragment extends Fragment implements OnTabChangeListener {
@@ -70,7 +69,10 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 		View indicator = LayoutInflater.from(getActivity()).inflate(
 				R.layout.tab,
 				(ViewGroup) mRoot.findViewById(android.R.id.tabs), false);
-		((TextView) indicator.findViewById(R.id.text)).setText(labelId);
+		if (tag.equals(TAB_HOME)) {
+			((ImageView) indicator.findViewById(R.id.tab_image)).setImageResource(R.drawable.tab_home);
+		}
+//		((TextView) indicator.findViewById(R.id.text)).setText(labelId);
 
 		TabSpec tabSpec = mTabHost.newTabSpec(tag);
 		tabSpec.setIndicator(indicator);

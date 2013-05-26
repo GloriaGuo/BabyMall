@@ -12,7 +12,7 @@
         android:background="#00000000"          
         android:layout_centerVertical="true"  
         android:layout_alignParentLeft="true"  
-        android:src="@drawable/back_button" />  
+        android:src="@drawable/navbarbackbtn" />  
   
     <TextView
         android:id="@+id/title"
@@ -28,7 +28,7 @@
         android:background="#00000000"  
         android:layout_centerInParent="true"  
         android:layout_alignParentRight="true"  
-        android:src="@drawable/next"
+        android:src="@drawable/navbarbtn"
         android:visibility="gone" />  
             
 </RelativeLayout>
