@@ -27,7 +27,7 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 
 	private View mRoot;
 	private TabHost mTabHost;
-	private int mCurrentTab;
+	private int mCurrentTab = 2;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -51,19 +51,19 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 		mTabHost.setOnTabChangedListener(this);
 		mTabHost.setCurrentTab(mCurrentTab);
 		// manually start loading stuff in the first tab
-		updateTab(TAB_HOME, R.id.tab_1);
+		updateTab(TAB_HOME, R.id.tab_2);
 	}
 
 	private void setupTabs() {
 		mTabHost.setup(); // important!
-		mTabHost.addTab(newTab(TAB_CATALOGUE, R.string.tab_text_1, R.id.tab_1));
-		mTabHost.addTab(newTab(TAB_PROFILE, R.string.tab_text_2, R.id.tab_2));
-		mTabHost.addTab(newTab(TAB_HOME, R.string.tab_text_3, R.id.tab_3));
-		mTabHost.addTab(newTab(TAB_CART, R.string.tab_text_4, R.id.tab_4));
-		mTabHost.addTab(newTab(TAB_MORE, R.string.tab_text_5, R.id.tab_5));
+		mTabHost.addTab(newTab(TAB_CATALOGUE, R.id.tab_0));
+		mTabHost.addTab(newTab(TAB_PROFILE, R.id.tab_1));
+		mTabHost.addTab(newTab(TAB_HOME, R.id.tab_2));
+		mTabHost.addTab(newTab(TAB_CART, R.id.tab_3));
+		mTabHost.addTab(newTab(TAB_MORE, R.id.tab_4));
 	}
 
-	private TabSpec newTab(String tag, int labelId, int tabContentId) {
+	private TabSpec newTab(String tag, int tabContentId) {
 		Log.d(TAG, "buildTab(): tag=" + tag);
 
 		View indicator = LayoutInflater.from(getActivity()).inflate(
@@ -72,7 +72,6 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 		if (tag.equals(TAB_HOME)) {
 			((ImageView) indicator.findViewById(R.id.tab_image)).setImageResource(R.drawable.tab_home);
 		}
-//		((TextView) indicator.findViewById(R.id.text)).setText(labelId);
 
 		TabSpec tabSpec = mTabHost.newTabSpec(tag);
 		tabSpec.setIndicator(indicator);
@@ -86,32 +85,32 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 		TabWidget tw = (TabWidget) mRoot.findViewById(android.R.id.tabs);
 		if (TAB_CATALOGUE.equals(tabId)) {
 			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_0));
-			updateTab(tabId, R.id.tab_1);
+			updateTab(tabId, R.id.tab_0);
 			mCurrentTab = 0;
 			return;
 		}
 		if (TAB_PROFILE.equals(tabId)) {
 			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_1));
-			updateTab(tabId, R.id.tab_2);
+			updateTab(tabId, R.id.tab_1);
 			mCurrentTab = 1;
 			return;
 		}
 		if (TAB_HOME.equals(tabId)) {
 			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_2));
-			updateTab(tabId, R.id.tab_3);
-			mCurrentTab = 1;
+			updateTab(tabId, R.id.tab_2);
+			mCurrentTab = 2;
 			return;
 		}
 		if (TAB_CART.equals(tabId)) {
 			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_3));
-			updateTab(tabId, R.id.tab_4);
-			mCurrentTab = 1;
+			updateTab(tabId, R.id.tab_3);
+			mCurrentTab = 3;
 			return;
 		}
 		if (TAB_MORE.equals(tabId)) {
 			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_4));
-			updateTab(tabId, R.id.tab_5);
-			mCurrentTab = 1;
+			updateTab(tabId, R.id.tab_4);
+			mCurrentTab = 4;
 			return;
 		}
 	}
