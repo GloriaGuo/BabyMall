@@ -1,5 +1,7 @@
 package com.goodbaby.babymall.activity;
 
+import java.net.URI;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +18,7 @@ public class AdvertismentActivity extends Activity {
         setContentView(R.layout.advertisment);
         
         ImageView mAdvertismentImage = (ImageView) findViewById(R.id.image_advertisment);
-        //mAdvertismentImage.setImageURI(uri);
+//        mAdvertismentImage.setImageURI(new URI("http://m.haohaizi.com/synapi/mobile_splash"));
         
         new Handler().postDelayed(new Runnable(){  
             @Override  
