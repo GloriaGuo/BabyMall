@@ -18,7 +18,7 @@ import com.goodbaby.babymall.R;
 
 public class TabsFragment extends Fragment implements OnTabChangeListener {
 
-	private static final String TAG = "FragmentTabs";
+	private static final String TAG = "TabsFragment";
 	public static final String TAB_HOME = "home";
 	public static final String TAB_CATALOGUE = "catalogue";
 	public static final String TAB_PROFILE = "profile";

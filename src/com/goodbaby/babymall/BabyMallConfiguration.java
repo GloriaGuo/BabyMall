@@ -2,7 +2,6 @@ package com.goodbaby.babymall;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 public class BabyMallConfiguration {
 
@@ -21,14 +20,4 @@ public class BabyMallConfiguration {
         mSharedPreferences = mContext.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);  
     }
     
-    /**
-     * Registers a new listener, whose callback will be triggered each time the
-     * internal shared preferences are modified
-     * @param listener to be registered
-     */
-    public void registerPreferenceChangeListener(
-    		final OnSharedPreferenceChangeListener listener) {
-        this.mSharedPreferences.registerOnSharedPreferenceChangeListener(listener);
-    }
-
 }

@@ -1,13 +1,17 @@
 package com.goodbaby.babymall.activity;
-
-import java.net.URI;
+    
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
 
+import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
 
 public class AdvertismentActivity extends Activity {
@@ -17,8 +21,18 @@ public class AdvertismentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.advertisment);
         
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(
+                    BabyMallApplication.EXTERNAL_STORAGE_PATH + BabyMallApplication.ADVERTISEMENT_IMAGE);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Bitmap bitmap = BitmapFactory.decodeStream(fis);
+        
         ImageView mAdvertismentImage = (ImageView) findViewById(R.id.image_advertisment);
-//        mAdvertismentImage.setImageURI(new URI("http://m.haohaizi.com/synapi/mobile_splash"));
+        mAdvertismentImage.setImageBitmap(bitmap);
         
         new Handler().postDelayed(new Runnable(){  
             @Override  

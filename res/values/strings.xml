@@ -2,13 +2,10 @@
 <resources>
 
     <string name="app_name">BabyMall</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title">Goodbaby Mall</string>
-
     <string name="back_button_text">Back</string>
-    <string name="tab_text_1"></string>
-    <string name="tab_text_2"></string>
-    <string name="tab_text_3"></string>
-    <string name="tab_text_4"></string>
-    <string name="tab_text_5"></string>
+    <string name="alert_dialog_title">Alert</string>
+    <string name="alert_advertisement_download_failed">The server is not response. Please try again later.</string>
+    <string name="alert_network_not_available">Oops!Your network is not available.</string>
+    
 </resources>

@@ -4,8 +4,6 @@ import java.io.File;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Environment;
 import android.util.Log;
 
@@ -14,7 +12,12 @@ public class BabyMallApplication extends Application {
 	/**
      * Log tag for this application.
      */
-    protected static String mApplicationTag = "PM";
+    protected static String mApplicationTag = "BabyMall";
+    
+    public static final String EXTERNAL_STORAGE_PATH = 
+            Environment.getExternalStorageDirectory() + "/" + ".babymall";
+    
+    public static final String ADVERTISEMENT_IMAGE = "advertisement.png";
     
     public static final boolean DEBUG = true;
     
@@ -54,7 +57,7 @@ public class BabyMallApplication extends Application {
         mContext = this;
         
         // Clean installed apk file automatically
-        final File apk = new File(Environment.getExternalStorageDirectory() + "/Download/kids.apk");
+        final File apk = new File(Environment.getExternalStorageDirectory() + "/Download/babymall.apk");
         if (apk.exists()) {
             // Found update apk in storage, delete it
             Log.i(mApplicationTag, "Cleaning existing update file " 
@@ -64,20 +67,6 @@ public class BabyMallApplication extends Application {
         
         // Configuration
         mConfiguration = new BabyMallConfiguration(mContext);
-
-        mConfiguration.registerPreferenceChangeListener(this.mSettingsListener);
     }
-    
-    private final OnSharedPreferenceChangeListener mSettingsListener = 
-            new OnSharedPreferenceChangeListener() {
-                /* (non-Javadoc)
-                 * @see android.content.SharedPreferences.OnSharedPreferenceChangeListener#onSharedPreferenceChanged(android.content.SharedPreferences, java.lang.String)
-                 */
-                @Override
-                public void onSharedPreferenceChanged(
-                        final SharedPreferences sharedPreferences, final String key) {
-                    BabyMallApplication.getConfiguration();
-                }
-            };
 
 }

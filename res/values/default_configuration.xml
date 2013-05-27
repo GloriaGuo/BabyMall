@@ -2,11 +2,12 @@
 
 <resources>
     
-    <string name="tab_home">http://m.haohaizi.com/</string>
+    <string name="advertisement">http://m.haohaizi.com/synapi/mobile_splash</string>
+    <string name="tab_home">http://m.haohaizi.com</string>
     <string name="tab_catalogue">http://m.haohaizi.com/category.html</string>
     <string name="tab_profile">http://m.haohaizi.com/passport-login.html</string>
     <string name="tab_cart">http://m.haohaizi.com/cart.html</string>
-    <string name="tab_more"></string>
+    <string name="tab_more">http://m.haohaizi.com/inapp/more.html?inapp</string>
     
     
 </resources>
