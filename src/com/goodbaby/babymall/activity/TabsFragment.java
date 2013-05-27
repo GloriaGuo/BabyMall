@@ -84,31 +84,31 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 		Log.d(TAG, "onTabChanged(): tabId=" + tabId);
 		TabWidget tw = (TabWidget) mRoot.findViewById(android.R.id.tabs);
 		if (TAB_CATALOGUE.equals(tabId)) {
-			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_0));
+			tw.setBackgroundDrawable(getResources().getDrawable(R.drawable.tabbar_0));
 			updateTab(tabId, R.id.tab_0);
 			mCurrentTab = 0;
 			return;
 		}
 		if (TAB_PROFILE.equals(tabId)) {
-			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_1));
+			tw.setBackgroundDrawable(getResources().getDrawable(R.drawable.tabbar_1));
 			updateTab(tabId, R.id.tab_1);
 			mCurrentTab = 1;
 			return;
 		}
 		if (TAB_HOME.equals(tabId)) {
-			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_2));
+			tw.setBackgroundDrawable(getResources().getDrawable(R.drawable.tabbar_2));
 			updateTab(tabId, R.id.tab_2);
 			mCurrentTab = 2;
 			return;
 		}
 		if (TAB_CART.equals(tabId)) {
-			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_3));
+			tw.setBackgroundDrawable(getResources().getDrawable(R.drawable.tabbar_3));
 			updateTab(tabId, R.id.tab_3);
 			mCurrentTab = 3;
 			return;
 		}
 		if (TAB_MORE.equals(tabId)) {
-			tw.setBackground(getResources().getDrawable(R.drawable.tabbar_4));
+			tw.setBackgroundDrawable(getResources().getDrawable(R.drawable.tabbar_4));
 			updateTab(tabId, R.id.tab_4);
 			mCurrentTab = 4;
 			return;
