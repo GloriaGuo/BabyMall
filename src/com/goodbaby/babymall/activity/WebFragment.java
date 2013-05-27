@@ -6,17 +6,20 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.HttpAuthHandler;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
 
 public class WebFragment extends Fragment {
 
-	private static final String TAG = "FragmentTabs";
+	private static final String TAG = BabyMallApplication.getApplicationTag()
+	        + WebFragment.class.getSimpleName();
 
     private View mRoot;
     private WebView mWebView;
@@ -32,20 +35,47 @@ public class WebFragment extends Fragment {
 		Log.d(TAG, "Constructor: tag=" + tag);
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		// this is really important in order to save the state across screen
-		// configuration changes for example
-		setRetainInstance(true);
+	/* (non-Javadoc)
+     * @see android.support.v4.app.Fragment#onCreate(android.os.Bundle)
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+    }
 
-		mInflater = LayoutInflater.from(getActivity());
-		mRoot = mInflater.inflate(R.layout.webview, null);
+    /* (non-Javadoc)
+     * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        mInflater = LayoutInflater.from(getActivity());
+        mRoot = mInflater.inflate(R.layout.webview, null);
 
         this.mWebView = (WebView) mRoot.findViewById(R.id.wv);
         this.mWebView.getSettings().setJavaScriptEnabled(true);
         this.mWebView.requestFocus();
-        this.mWebView.loadUrl("http://m.haohaizi.com/");
+        
+
+        if (mTag.endsWith(TabsFragment.TAB_HOME)) {
+            this.mWebView.loadUrl(getResources().getString(R.string.tab_home));
+        }
+        else if (mTag.endsWith(TabsFragment.TAB_CATALOGUE)) {
+            this.mWebView.loadUrl(getResources().getString(R.string.tab_catalogue));
+        }
+        else if (mTag.endsWith(TabsFragment.TAB_PROFILE)) {
+            this.mWebView.loadUrl(getResources().getString(R.string.tab_profile));
+        }
+        else if (mTag.endsWith(TabsFragment.TAB_CART)) {
+            this.mWebView.loadUrl(getResources().getString(R.string.tab_cart));
+        }
+        else if (mTag.endsWith(TabsFragment.TAB_MORE)) {
+            this.mWebView.loadUrl(getResources().getString(R.string.tab_more));
+        }
+        else {
+            Log.v(TAG, "got tag=" + mTag);
+        }
 
         mWebView.setWebViewClient(new WebViewClient(){       
             public boolean shouldOverrideUrlLoading(WebView view, String url) {       
@@ -134,6 +164,16 @@ public class WebFragment extends Fragment {
             }
             
         });
+        return mRoot;
+    }
+
+    @Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		// this is really important in order to save the state across screen
+		// configuration changes for example
+		setRetainInstance(true);
+
 		// you only need to instantiate these the first time your fragment is
 		// created; then, the method above will do the rest
 
