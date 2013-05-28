@@ -12,6 +12,7 @@ import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
@@ -23,6 +24,7 @@ public class WebFragment extends Fragment {
 
     private View mRoot;
     private WebView mWebView;
+    private ProgressBar mProgressBar;
 	private String mTag;
 	private LayoutInflater mInflater;
 
@@ -40,7 +42,6 @@ public class WebFragment extends Fragment {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
     }
 
@@ -54,33 +55,56 @@ public class WebFragment extends Fragment {
         mRoot = mInflater.inflate(R.layout.webview, null);
 
         this.mWebView = (WebView) mRoot.findViewById(R.id.wv);
+        this.mProgressBar = (ProgressBar) mRoot.findViewById(R.id.wv_progress);
         this.mWebView.getSettings().setJavaScriptEnabled(true);
         this.mWebView.requestFocus();
-        
 
-        if (mTag.endsWith(TabsFragment.TAB_HOME)) {
-            this.mWebView.loadUrl(getResources().getString(R.string.tab_home));
-        }
-        else if (mTag.endsWith(TabsFragment.TAB_CATALOGUE)) {
-            this.mWebView.loadUrl(getResources().getString(R.string.tab_catalogue));
-        }
-        else if (mTag.endsWith(TabsFragment.TAB_PROFILE)) {
-            this.mWebView.loadUrl(getResources().getString(R.string.tab_profile));
-        }
-        else if (mTag.endsWith(TabsFragment.TAB_CART)) {
-            this.mWebView.loadUrl(getResources().getString(R.string.tab_cart));
-        }
-        else if (mTag.endsWith(TabsFragment.TAB_MORE)) {
-            this.mWebView.loadUrl(getResources().getString(R.string.tab_more));
-        }
-        else {
-            Log.v(TAG, "got tag=" + mTag);
-        }
+        initWebView();
+
+        loadURL();
+        
+        return mRoot;
+    }
+
+    @Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		// this is really important in order to save the state across screen
+		// configuration changes for example
+		setRetainInstance(true);
+
+		// you only need to instantiate these the first time your fragment is
+		// created; then, the method above will do the rest
+
+	}
+
+    /* (non-Javadoc)
+     * @see android.support.v4.app.Fragment#onResume()
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+
+    private void initWebView() {
 
         mWebView.setWebViewClient(new WebViewClient(){       
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {       
-                view.loadUrl(url);       
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.v(TAG, url);
+                mProgressBar.setVisibility(View.VISIBLE);
+                view.loadUrl(url);
                 return true;       
+            }
+
+            /* (non-Javadoc)
+             * @see android.webkit.WebViewClient#onPageFinished(android.webkit.WebView, java.lang.String)
+             */
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                mProgressBar.setVisibility(View.GONE);
+                mWebView.setVisibility(View.VISIBLE);
+                super.onPageFinished(view, url);
             }
 
             /* (non-Javadoc)
@@ -89,7 +113,6 @@ public class WebFragment extends Fragment {
             @Override
             public void onReceivedError(WebView view, int errorCode,
                     String description, String failingUrl) {
-                // TODO Auto-generated method stub
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
 
@@ -99,7 +122,6 @@ public class WebFragment extends Fragment {
             @Override
             public void onReceivedHttpAuthRequest(WebView view,
                     HttpAuthHandler handler, String host, String realm) {
-                // TODO Auto-generated method stub
                 super.onReceivedHttpAuthRequest(view, handler, host, realm);
             }
 
@@ -109,7 +131,6 @@ public class WebFragment extends Fragment {
             @Override
             public void onReceivedLoginRequest(WebView view, String realm,
                     String account, String args) {
-                // TODO Auto-generated method stub
                 super.onReceivedLoginRequest(view, realm, account, args);
             }
             
@@ -133,7 +154,6 @@ public class WebFragment extends Fragment {
             @Override
             public boolean onJsConfirm(WebView view, String url,
                     String message, JsResult result) {
-                // TODO Auto-generated method stub
                 return super.onJsConfirm(view, url, message, result);
             }
 
@@ -142,7 +162,6 @@ public class WebFragment extends Fragment {
              */
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                // TODO Auto-generated method stub
                 super.onProgressChanged(view, newProgress);
             }
 
@@ -151,7 +170,6 @@ public class WebFragment extends Fragment {
              */
             @Override
             public void onReceivedIcon(WebView view, Bitmap icon) {
-                // TODO Auto-generated method stub
                 super.onReceivedIcon(view, icon);
             }
 
@@ -164,22 +182,29 @@ public class WebFragment extends Fragment {
             }
             
         });
-        return mRoot;
     }
 
-    @Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		// this is really important in order to save the state across screen
-		// configuration changes for example
-		setRetainInstance(true);
+    private void loadURL() {
 
-		// you only need to instantiate these the first time your fragment is
-		// created; then, the method above will do the rest
+        if (mTag.endsWith(TabsFragment.TAB_HOME)) {
+            this.mWebView.loadUrl(getResources().getString(R.string.tab_home));
+        }
+        else if (mTag.endsWith(TabsFragment.TAB_CATALOGUE)) {
+            this.mWebView.loadUrl(getResources().getString(R.string.tab_catalogue));
+        }
+        else if (mTag.endsWith(TabsFragment.TAB_PROFILE)) {
+            this.mWebView.loadUrl(getResources().getString(R.string.tab_profile));
+        }
+        else if (mTag.endsWith(TabsFragment.TAB_CART)) {
+            this.mWebView.loadUrl(getResources().getString(R.string.tab_cart));
+        }
+        else if (mTag.endsWith(TabsFragment.TAB_MORE)) {
+            this.mWebView.loadUrl(getResources().getString(R.string.tab_more));
+        }
+        else {
+            Log.v(TAG, "got tag=" + mTag);
+        }
 
-		// initiate the loader to do the background work
-	}
-
-
+    }
 
 }
