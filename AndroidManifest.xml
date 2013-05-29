@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity 
-            android:name=".activity.AdvertismentActivity" 
+            android:name=".activity.AdvertisementActivity" 
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:label="@string/app_name" />
         <activity
