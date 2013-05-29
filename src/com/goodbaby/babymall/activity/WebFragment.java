@@ -1,5 +1,6 @@
 package com.goodbaby.babymall.activity;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
@@ -37,6 +39,10 @@ public class WebFragment extends Fragment {
 		Log.d(TAG, "Constructor: tag=" + tag);
 	}
 
+    public interface UIUpdateInterface {
+        public void onTitleUpdate(String title);
+    }
+    
 	/* (non-Javadoc)
      * @see android.support.v4.app.Fragment#onCreate(android.os.Bundle)
      */
@@ -60,7 +66,6 @@ public class WebFragment extends Fragment {
         this.mWebView.requestFocus();
 
         initWebView();
-
         loadURL();
         
         return mRoot;
@@ -104,6 +109,7 @@ public class WebFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
                 mProgressBar.setVisibility(View.GONE);
                 mWebView.setVisibility(View.VISIBLE);
+                mWebView.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
                 super.onPageFinished(view, url);
             }
 
@@ -182,6 +188,8 @@ public class WebFragment extends Fragment {
             }
             
         });
+        
+        mWebView.addJavascriptInterface(new CustomJavaScriptInterface(), "APP_TITLE");
     }
 
     private void loadURL() {
@@ -207,4 +215,31 @@ public class WebFragment extends Fragment {
 
     }
 
+
+    
+    UIUpdateInterface mUIUpdateInterface;
+    
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        try{
+            mUIUpdateInterface = (UIUpdateInterface)activity;
+        }catch(ClassCastException e){
+            throw new ClassCastException(activity.toString() + "must implement OnArticleSelectedListener");
+        }
+    }
+    
+    public class CustomJavaScriptInterface {
+
+//        Context mContext;
+//
+//        /** Instantiate the interface and set the context */
+//        CustomJavaScriptInterface(Context c) {
+//            mContext = c;
+//        }
+        /** retrieve the app title */
+        public void getAppTitle(final String title) {
+            mUIUpdateInterface.onTitleUpdate(title);
+        }
+    }
 }

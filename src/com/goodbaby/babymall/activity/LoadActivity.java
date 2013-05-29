@@ -6,20 +6,20 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.goodbaby.babymall.BabyMallApplication;
-import com.goodbaby.babymall.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.goodbaby.babymall.BabyMallApplication;
+import com.goodbaby.babymall.R;
 
 public class LoadActivity extends Activity {
     
