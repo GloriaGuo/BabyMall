@@ -72,7 +72,6 @@ public class LoadActivity extends Activity {
     
     private void showAlert(int message) {
         AlertDialog mErrorDialog = new AlertDialog.Builder(this)
-            .setTitle(R.string.alert_dialog_title) 
             .setMessage(message)
             .setCancelable(true)
             .setOnCancelListener(new OnCancelListener() {
@@ -86,19 +85,23 @@ public class LoadActivity extends Activity {
     }
     
     private void saveBitmapToFile(Bitmap bitmap) {
-        File f = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH);
-        f.mkdirs();
+        File dir = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH);
+        dir.mkdirs();
         
-        f = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH + BabyMallApplication.ADVERTISEMENT_IMAGE);
+        File f = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH + BabyMallApplication.ADVERTISEMENT_IMAGE);
         FileOutputStream fOut = null;
         try {
+            if (f.exists()) {
+                Log.d(TAG, "Remove the previous file.");
+                f.delete();
+            }
             f.createNewFile();
             fOut = new FileOutputStream(f);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
             fOut.flush();
             fOut.close();
-        } catch (Exception e1) {
-            e1.printStackTrace();
+        } catch (Exception e) {
+            Log.e(TAG, "Create the advertisement file failed: " + e.getMessage());
         }
     }
     
@@ -114,7 +117,7 @@ public class LoadActivity extends Activity {
                 showAlert(R.string.alert_advertisement_download_failed);
             } else {
                 saveBitmapToFile(mAdvertisementBitmap);
-                Intent intent = new Intent(LoadActivity.this, AdvertismentActivity.class);  
+                Intent intent = new Intent(LoadActivity.this, AdvertisementActivity.class);  
                 LoadActivity.this.startActivity(intent);  
                 LoadActivity.this.finish();  
             }
