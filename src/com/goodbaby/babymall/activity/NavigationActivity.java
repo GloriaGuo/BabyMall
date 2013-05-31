@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.goodbaby.babymall.R;
 import com.goodbaby.babymall.activity.WebFragment.UIUpdateInterface;
 
-public class NavigationActivity extends FragmentActivity implements UIUpdateInterface{
+public class NavigationActivity extends FragmentActivity implements UIUpdateInterface {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {

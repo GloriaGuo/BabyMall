@@ -14,7 +14,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
@@ -60,10 +59,12 @@ public class WebFragment extends Fragment {
         mInflater = LayoutInflater.from(getActivity());
         mRoot = mInflater.inflate(R.layout.webview, null);
 
-        this.mWebView = (WebView) mRoot.findViewById(R.id.wv);
-        this.mProgressBar = (ProgressBar) mRoot.findViewById(R.id.wv_progress);
-        this.mWebView.getSettings().setJavaScriptEnabled(true);
-        this.mWebView.requestFocus();
+        mWebView = (WebView) mRoot.findViewById(R.id.wv);
+        mProgressBar = (ProgressBar) mRoot.findViewById(R.id.wv_progress);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.requestFocus();
+        mWebView.getSettings().setLoadWithOverviewMode(true);
+        mWebView.getSettings().setUseWideViewPort(true);
 
         initWebView();
         loadURL();
