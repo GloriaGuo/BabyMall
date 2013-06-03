@@ -13,6 +13,7 @@ import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -31,6 +32,7 @@ public class WebFragment extends Fragment {
     private ProgressBar mProgressBar;
 	private String mTag;
 	private LayoutInflater mInflater;
+	private CustomJavaScriptInterface mCustomJavaScriptInterface;
 
 	public WebFragment() {
 	}
@@ -43,6 +45,7 @@ public class WebFragment extends Fragment {
 
     public interface UIUpdateInterface {
         public void onTitleUpdate(String title);
+        public void onBadgeUpdate(int cartNumber);
     }
     
 	/* (non-Javadoc)
@@ -68,6 +71,10 @@ public class WebFragment extends Fragment {
         mWebView.requestFocus();
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        mWebView.getSettings().setAppCacheEnabled(false);
+        
+        mCustomJavaScriptInterface = new CustomJavaScriptInterface();
 
         initWebView();
         loadURL();
@@ -195,7 +202,7 @@ public class WebFragment extends Fragment {
             
         });
         
-        mWebView.addJavascriptInterface(new CustomJavaScriptInterface(), "APP_TITLE");
+        mWebView.addJavascriptInterface(mCustomJavaScriptInterface, "APP_TITLE");
     }
 
     private void loadURL() {
@@ -238,7 +245,7 @@ public class WebFragment extends Fragment {
     private void updateCartNumber(String url) {
 		int cart_number = getCartNumber(url);
 		if (cart_number > 0) {
-			// TODO: update badge on tab cart
+		    mCustomJavaScriptInterface.getCartNumber(cart_number);
 		}
 	}
 
@@ -268,6 +275,11 @@ public class WebFragment extends Fragment {
     	@JavascriptInterface
         public void getAppTitle(final String title) {
             mUIUpdateInterface.onTitleUpdate(title);
+        }
+        /** retrieve the cart number */
+        @JavascriptInterface
+        public void getCartNumber(final int cartTitle) {
+            mUIUpdateInterface.onBadgeUpdate(cartTitle);
         }
     }
 }

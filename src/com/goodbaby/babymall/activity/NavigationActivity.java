@@ -4,15 +4,30 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
+import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
 import com.goodbaby.babymall.activity.WebFragment.UIUpdateInterface;
 
 public class NavigationActivity extends FragmentActivity implements UIUpdateInterface {
+
+    private static final String TAG = BabyMallApplication.getApplicationTag()
+            + NavigationActivity.class.getSimpleName();
     
     private MyHandler myHandler;
+    private BadgeView mBadge;
+    
+    private static final int UPDATE_WHAT_TITLE = 0;
+    private static final int UPDATE_WHAT_BADGE = 1;
+    
+
+    private static final String UPDATE_KEY_TITLE = "title";
+    private static final String UPDATE_KEY_BADGE = "badge";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +35,11 @@ public class NavigationActivity extends FragmentActivity implements UIUpdateInte
 
         requestWindowFeature(Window.FEATURE_CUSTOM_TITLE); 
         setContentView(R.layout.activity_main);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title); 
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
+        
+
+        TabHost tw = (TabHost) findViewById(android.R.id.tabhost);
+        mBadge = new BadgeView(NavigationActivity.this, tw);
         
         myHandler = new MyHandler();
     }
@@ -28,9 +47,19 @@ public class NavigationActivity extends FragmentActivity implements UIUpdateInte
     @Override
     public void onTitleUpdate(String title) {
         Bundle b = new Bundle();
-        b.putString("title", title);
+        b.putString(UPDATE_KEY_TITLE, title);
         Message msg = new Message();
-        msg.what = 0;
+        msg.what = UPDATE_WHAT_TITLE;
+        msg.setData(b);
+        this.myHandler.sendMessage(msg);
+    }
+
+    @Override
+    public void onBadgeUpdate(int cartNumber) {
+        Bundle b = new Bundle();
+        b.putInt(UPDATE_KEY_BADGE, cartNumber);
+        Message msg = new Message();
+        msg.what = UPDATE_WHAT_BADGE;
         msg.setData(b);
         this.myHandler.sendMessage(msg);
     }
@@ -42,13 +71,23 @@ public class NavigationActivity extends FragmentActivity implements UIUpdateInte
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            
-            if (msg.what == 0) {
-                // update the title
+            Log.v(TAG, "got msg=" + msg.what);
+            if (msg.what == UPDATE_WHAT_TITLE) {
                 TextView tv_title = (TextView) findViewById(R.id.navTitle);
-                tv_title.setText(msg.getData().getString("title"));
+                tv_title.setText(msg.getData().getString(UPDATE_KEY_TITLE));
+            }
+            else if (msg.what == UPDATE_WHAT_BADGE) {
+                int cartNumber = msg.getData().getInt(UPDATE_KEY_BADGE);
+                mBadge.setText(String.valueOf(cartNumber));
+//                badge.setBackgroundResource(R.drawable.badge);
+//                badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+                mBadge.setBadgeMargin(130, 950);
+                mBadge.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                mBadge.show();
+                Log.v(TAG, "cartNumber=" + cartNumber);
             }
         }
     }
+
 
 }
