@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -23,6 +25,7 @@ public class WebFragment extends Fragment {
 	private static final String TAG = BabyMallApplication.getApplicationTag()
 	        + WebFragment.class.getSimpleName();
 
+	private static final String CART_NUMBER = "S[CART_NUMBER]";
     private View mRoot;
     private WebView mWebView;
     private ProgressBar mProgressBar;
@@ -111,6 +114,8 @@ public class WebFragment extends Fragment {
                 mProgressBar.setVisibility(View.GONE);
                 mWebView.setVisibility(View.VISIBLE);
                 mWebView.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
+                
+                updateCartNumber(url);
                 super.onPageFinished(view, url);
             }
 
@@ -230,7 +235,28 @@ public class WebFragment extends Fragment {
         }
     }
     
-    public class CustomJavaScriptInterface {
+    private void updateCartNumber(String url) {
+		int cart_number = getCartNumber(url);
+		if (cart_number > 0) {
+			// TODO: update badge on tab cart
+		}
+	}
+
+	private int getCartNumber(String url) {
+		int cart_number = 0;
+		CookieManager cookieManager = CookieManager.getInstance();
+		String cookies = cookieManager.getCookie(url);
+//		Log.v(TAG, "COOKIES:" + cookieManager.getCookie(url));
+		if (cookies.contains(CART_NUMBER)) {
+			int start = cookies.indexOf(CART_NUMBER) + CART_NUMBER.length() + 1;
+			int end = cookies.indexOf(';', start);
+			cart_number = Integer.parseInt(cookies.substring(start, end));
+			Log.v(TAG, "Have CART_NUMBER=" + cart_number);
+		}
+		return cart_number;
+	}
+
+	public class CustomJavaScriptInterface {
 
 //        Context mContext;
 //
@@ -239,6 +265,7 @@ public class WebFragment extends Fragment {
 //            mContext = c;
 //        }
         /** retrieve the app title */
+    	@JavascriptInterface
         public void getAppTitle(final String title) {
             mUIUpdateInterface.onTitleUpdate(title);
         }
