@@ -81,7 +81,7 @@ public class NavigationActivity extends FragmentActivity implements UIUpdateInte
                 mBadge.setText(String.valueOf(cartNumber));
 //                badge.setBackgroundResource(R.drawable.badge);
 //                badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-                mBadge.setBadgeMargin(130, 950);
+                mBadge.setBadgeMargin(150, 950);
                 mBadge.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 mBadge.show();
                 Log.v(TAG, "cartNumber=" + cartNumber);
