@@ -227,8 +227,6 @@ public class WebFragment extends Fragment {
         }
 
     }
-
-
     
     UIUpdateInterface mUIUpdateInterface;
     
@@ -254,7 +252,7 @@ public class WebFragment extends Fragment {
 		CookieManager cookieManager = CookieManager.getInstance();
 		String cookies = cookieManager.getCookie(url);
 //		Log.v(TAG, "COOKIES:" + cookieManager.getCookie(url));
-		if (cookies.contains(CART_NUMBER)) {
+		if (null != cookies && cookies.contains(CART_NUMBER)) {
 			int start = cookies.indexOf(CART_NUMBER) + CART_NUMBER.length() + 1;
 			int end = cookies.indexOf(';', start);
 			cart_number = Integer.parseInt(cookies.substring(start, end));
