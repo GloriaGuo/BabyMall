@@ -5,9 +5,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
+import android.view.Gravity;
 import android.view.Window;
-import android.widget.TabHost;
+import android.widget.ImageView;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.goodbaby.babymall.BabyMallApplication;
@@ -38,7 +39,7 @@ public class NavigationActivity extends FragmentActivity implements UIUpdateInte
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
         
 
-        TabHost tw = (TabHost) findViewById(android.R.id.tabhost);
+        ImageView tw = (ImageView) ((TabWidget) findViewById(android.R.id.tabs)).getChildAt(3).findViewById(R.id.tab_image);
         mBadge = new BadgeView(NavigationActivity.this, tw);
         
         myHandler = new MyHandler();
@@ -79,10 +80,9 @@ public class NavigationActivity extends FragmentActivity implements UIUpdateInte
             else if (msg.what == UPDATE_WHAT_BADGE) {
                 int cartNumber = msg.getData().getInt(UPDATE_KEY_BADGE);
                 mBadge.setText(String.valueOf(cartNumber));
-//                badge.setBackgroundResource(R.drawable.badge);
-//                badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-                mBadge.setBadgeMargin(150, 950);
-                mBadge.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                mBadge.setBackgroundResource(R.drawable.badge);
+                mBadge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+                mBadge.setGravity(Gravity.CENTER);
                 mBadge.show();
                 Log.v(TAG, "cartNumber=" + cartNumber);
             }
