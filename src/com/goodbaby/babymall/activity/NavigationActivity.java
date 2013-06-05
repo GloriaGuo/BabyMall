@@ -65,15 +65,17 @@ public class NavigationActivity extends Activity
         mTabButton2 = (Button) findViewById(R.id.tab_button_2);
         mTabButton3 = (Button) findViewById(R.id.tab_button_3);
         mTabButton4 = (Button) findViewById(R.id.tab_button_4);
-
-        mTabButton2.setBackgroundResource(R.drawable.tabbar_mainbtn);
-        mBadge = new BadgeView(this, mTabButton3);
-        
         mTabButton0.setOnClickListener(this);
         mTabButton1.setOnClickListener(this);
         mTabButton2.setOnClickListener(this);
         mTabButton3.setOnClickListener(this);
         mTabButton4.setOnClickListener(this);
+
+        mTabButton2.setBackgroundResource(R.drawable.tabbar_mainbtn);
+        
+        mBadge = new BadgeView(this, mTabButton3);
+        mBadge.setBackgroundResource(R.drawable.badge);
+        
     }
     
     @Override
@@ -93,7 +95,7 @@ public class NavigationActivity extends Activity
             break;
         case R.id.tab_button_3:
             mTabsLayout.setBackgroundResource(R.drawable.tabbar_3);
-            mCustomWebView.updateUrl(mCustomWebView.TAB_PROFILE);
+            mCustomWebView.updateUrl(mCustomWebView.TAB_CART);
             break;
         case R.id.tab_button_4:
             mTabsLayout.setBackgroundResource(R.drawable.tabbar_4);
