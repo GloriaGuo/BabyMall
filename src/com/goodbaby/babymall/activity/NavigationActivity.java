@@ -29,6 +29,11 @@ public class NavigationActivity extends FragmentActivity
     private MyHandler myHandler;
     private BadgeView mBadge;
     private CustomWebView mCustomWebView;
+    private Button mTabButton0;
+    private Button mTabButton1;
+    private Button mTabButton2;
+    private Button mTabButton3;
+    private Button mTabButton4;
     
     private static final int UPDATE_WHAT_TITLE = 0;
     private static final int UPDATE_WHAT_BADGE = 1;
@@ -45,16 +50,33 @@ public class NavigationActivity extends FragmentActivity
         setContentView(R.layout.activity_main);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
         
-        ((Button) findViewById(R.id.tab_button_2)).setBackgroundResource(R.drawable.tabbar_mainbtn);
         
         mCustomWebView = new CustomWebView();
         mCustomWebView.init(this, R.id.wv, R.id.wv_progress);
         
-        Button tw = (Button) findViewById(R.id.tab_button_3);
-        mBadge = new BadgeView(NavigationActivity.this, tw);
-        
         myHandler = new MyHandler();
     }
+    
+    void initTab() {
+        mTabButton0 = (Button) findViewById(R.id.tab_button_0);
+        mTabButton1 = (Button) findViewById(R.id.tab_button_1);
+        mTabButton2 = (Button) findViewById(R.id.tab_button_2);
+        mTabButton3 = (Button) findViewById(R.id.tab_button_3);
+        mTabButton4 = (Button) findViewById(R.id.tab_button_4);
+        
+        mTabButton2.setBackgroundResource(R.drawable.tabbar_mainbtn);
+        mBadge = new BadgeView(NavigationActivity.this, mTabButton3);
+    }
+    
+    OnClickListener mTabButtonListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View arg0) {
+            // TODO Auto-generated method stub
+            
+        }
+        
+    };
 
     @Override
     public void onTitleUpdate(String title) {
