@@ -10,8 +10,7 @@
         android:id="@+id/wv"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="hello"
-        android:visibility="gone" />
+        />
     <ProgressBar
         android:id="@+id/wv_progress"
         android:layout_width="wrap_content"

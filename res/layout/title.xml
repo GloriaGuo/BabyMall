@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:paddingLeft="5dp"
-        android:src="@drawable/navbarbackbtn"
+        android:paddingLeft="10dp"
+        android:background="@drawable/navbarbackbtn"
         android:visibility="gone"
         />  
 

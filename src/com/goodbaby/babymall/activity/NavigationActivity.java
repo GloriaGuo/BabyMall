@@ -6,7 +6,11 @@ import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.webkit.WebView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TabWidget;
 import android.widget.TextView;
@@ -15,7 +19,8 @@ import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
 import com.goodbaby.babymall.activity.WebFragment.UIUpdateInterface;
 
-public class NavigationActivity extends FragmentActivity implements UIUpdateInterface {
+public class NavigationActivity extends FragmentActivity 
+    implements UIUpdateInterface {
 
     private static final String TAG = BabyMallApplication.getApplicationTag()
             + NavigationActivity.class.getSimpleName();
@@ -38,7 +43,6 @@ public class NavigationActivity extends FragmentActivity implements UIUpdateInte
         setContentView(R.layout.activity_main);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
         
-
         ImageView tw = (ImageView) ((TabWidget) findViewById(android.R.id.tabs)).getChildAt(3).findViewById(R.id.tab_image);
         mBadge = new BadgeView(NavigationActivity.this, tw);
         
@@ -89,5 +93,23 @@ public class NavigationActivity extends FragmentActivity implements UIUpdateInte
         }
     }
 
+    @Override
+    public void onLeftButtonUpdate(final WebView view) {
+        ImageButton leftButton = (ImageButton) findViewById(R.id.imageButtonLeft);
+        if (view.canGoBack()) {
+            leftButton.setVisibility(View.VISIBLE);
+        } else {
+            leftButton.setVisibility(View.GONE);
+        }
+       
+        leftButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                view.goBack();
+            }
+            
+        });
+    }
 
 }

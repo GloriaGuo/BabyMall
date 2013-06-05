@@ -42,9 +42,9 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 
     private SensorManager mSensorManager;
     
-	@Override
+    @Override
 	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	    super.onAttach(activity);
 	}
 
 	/* (non-Javadoc)
@@ -139,13 +139,14 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 		}
 	}
 
-	private void updateTab(String tabId, int placeholder) {
-		FragmentManager fm = getFragmentManager();
-//		if (fm.findFragmentByTag(tabId) == null) {
-			fm.beginTransaction()
-					.replace(placeholder, new WebFragment(tabId), tabId)
-					.commit();
-//		}
+	private void updateTab(String tabId, int placeholder) {	 
+	    FragmentManager fm = getFragmentManager();
+	    WebFragment wf = (WebFragment) fm.findFragmentByTag("web");
+	    if (null == wf) {
+            fm.beginTransaction().replace(placeholder, new WebFragment(tabId), "web").commit();
+	    } else {
+	        wf.updateUrl(tabId);
+	    }
 	}
 
 	private final SensorEventListener mSensorListener = new SensorEventListener() {
@@ -235,7 +236,10 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 	@Override
     public void onResume() {
 	    super.onResume();
-	    mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+	    mSensorManager.registerListener(
+	            mSensorListener, 
+	            mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 
+	            SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
 	@Override

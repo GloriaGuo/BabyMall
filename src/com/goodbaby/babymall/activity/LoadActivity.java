@@ -24,8 +24,10 @@ import com.goodbaby.babymall.R;
 public class LoadActivity extends Activity {
     
     private static final String TAG = "LoadActivity";
-    
+        
     private MyHandler myHandler;
+    
+    private Boolean isAlive = true;
     
     Bitmap mAdvertisementBitmap = null;
     
@@ -45,6 +47,18 @@ public class LoadActivity extends Activity {
                 LoadActivity.this.myHandler.sendEmptyMessage(0);
             }
         }).start();
+    }
+    
+    @Override
+    protected void onPause() {
+        isAlive = false;
+        super.onPause();
+    }
+    
+    @Override  
+    protected void onDestroy() {
+        isAlive = false;
+        super.onDestroy();
     }
     
     public Bitmap getHttpBitmap(String url){
@@ -112,6 +126,10 @@ public class LoadActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            
+            if (!isAlive) {
+                return;
+            }
             
             if (null == mAdvertisementBitmap) {
                 showAlert(R.string.alert_advertisement_download_failed);

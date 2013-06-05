@@ -35,17 +35,16 @@ public class WebFragment extends Fragment {
 	private CustomJavaScriptInterface mCustomJavaScriptInterface;
 
 	public WebFragment() {
+	    
 	}
-
 	public WebFragment(String tag) {
 		mTag = tag;
-
-		Log.d(TAG, "Constructor: tag=" + tag);
 	}
-
+	
     public interface UIUpdateInterface {
         public void onTitleUpdate(String title);
         public void onBadgeUpdate(int cartNumber);
+        public void onLeftButtonUpdate(WebView view);
     }
     
 	/* (non-Javadoc)
@@ -62,6 +61,7 @@ public class WebFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        Log.d(TAG, "---> onCreateView");
         mInflater = LayoutInflater.from(getActivity());
         mRoot = mInflater.inflate(R.layout.webview, null);
 
@@ -73,13 +73,20 @@ public class WebFragment extends Fragment {
         mWebView.getSettings().setUseWideViewPort(true);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setAppCacheEnabled(false);
+        mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);  
         
         mCustomJavaScriptInterface = new CustomJavaScriptInterface();
 
         initWebView();
         loadURL();
-        
+
         return mRoot;
+    }
+    
+    public void updateUrl(String tag) {
+        mTag = tag;
+        initWebView();
+        loadURL();
     }
 
     @Override
@@ -91,7 +98,6 @@ public class WebFragment extends Fragment {
 
 		// you only need to instantiate these the first time your fragment is
 		// created; then, the method above will do the rest
-
 	}
 
     /* (non-Javadoc)
@@ -99,15 +105,27 @@ public class WebFragment extends Fragment {
      */
     @Override
     public void onResume() {
+        mWebView.onResume();
+
         super.onResume();
     }
 
-
+    @Override
+    public void onDestroy() {
+        if (mWebView != null) {
+            mWebView.destroy();
+            mWebView = null;
+        }
+        super.onDestroy();
+    }
+    
     private void initWebView() {
 
-        mWebView.setWebViewClient(new WebViewClient(){       
+        mWebView.setWebViewClient(new WebViewClient(){  
+            @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.v(TAG, url);
+
                 mProgressBar.setVisibility(View.VISIBLE);
                 view.loadUrl(url);
                 return true;       
@@ -119,9 +137,9 @@ public class WebFragment extends Fragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 mProgressBar.setVisibility(View.GONE);
-                mWebView.setVisibility(View.VISIBLE);
-                mWebView.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
-                
+                view.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
+                updateLeftButton(view);
+
                 updateCartNumber(url);
                 super.onPageFinished(view, url);
             }
@@ -227,17 +245,13 @@ public class WebFragment extends Fragment {
         }
 
     }
-    
-    UIUpdateInterface mUIUpdateInterface;
-    
+        
     @Override
     public void onAttach(Activity activity){
-        super.onAttach(activity);
-        try{
-            mUIUpdateInterface = (UIUpdateInterface)activity;
-        }catch(ClassCastException e){
-            throw new ClassCastException(activity.toString() + "must implement OnArticleSelectedListener");
+        if (!(activity instanceof UIUpdateInterface)) {
+            throw new ClassCastException(activity.toString() + "must implement UIUpdateInterface!");
         }
+        super.onAttach(activity);
     }
     
     private void updateCartNumber(String url) {
@@ -251,33 +265,32 @@ public class WebFragment extends Fragment {
 		int cart_number = 0;
 		CookieManager cookieManager = CookieManager.getInstance();
 		String cookies = cookieManager.getCookie(url);
-//		Log.v(TAG, "COOKIES:" + cookieManager.getCookie(url));
 		if (null != cookies && cookies.contains(CART_NUMBER)) {
 			int start = cookies.indexOf(CART_NUMBER) + CART_NUMBER.length() + 1;
 			int end = cookies.indexOf(';', start);
 			cart_number = Integer.parseInt(cookies.substring(start, end));
-			Log.v(TAG, "Have CART_NUMBER=" + cart_number);
+			Log.d(TAG, "Have CART_NUMBER=" + cart_number);
 		}
 		return cart_number;
 	}
 
+	private void updateLeftButton(WebView view) {
+	    ((UIUpdateInterface)getActivity()).onLeftButtonUpdate(view);
+	}
+	
 	public class CustomJavaScriptInterface {
 
-//        Context mContext;
-//
-//        /** Instantiate the interface and set the context */
-//        CustomJavaScriptInterface(Context c) {
-//            mContext = c;
-//        }
         /** retrieve the app title */
     	@JavascriptInterface
         public void getAppTitle(final String title) {
-            mUIUpdateInterface.onTitleUpdate(title);
+    	    ((UIUpdateInterface)getActivity()).onTitleUpdate(title);
         }
+    	
         /** retrieve the cart number */
         @JavascriptInterface
         public void getCartNumber(final int cartTitle) {
-            mUIUpdateInterface.onBadgeUpdate(cartTitle);
+            ((UIUpdateInterface)getActivity()).onBadgeUpdate(cartTitle);
         }
+       
     }
 }
