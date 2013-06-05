@@ -1,11 +1,5 @@
 package com.goodbaby.babymall.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,6 +9,7 @@ import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
+import android.webkit.MimeTypeMap;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -49,7 +44,7 @@ public class CustomWebView {
         public void onTitleUpdate(String title);
         public void onBadgeUpdate(String cartNumber);
         public void onLeftButtonUpdate();
-        public void onPhotoBrowserStart(List<String> urls);
+        public void onPhotoBrowserStart(String urls);
     }
     
     public void init(Context context, int webViewId, int processId) {
@@ -84,7 +79,13 @@ public class CustomWebView {
                 Log.v(TAG, url);
 
                 mProgressBar.setVisibility(View.VISIBLE);
-                view.loadUrl(url);
+                if (MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("jpg") ||
+                    MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("png")) {
+                    view.loadUrl("javascript:window.APP_TITLE.getGalleryList(hhz_gallery)");
+                    mProgressBar.setVisibility(View.GONE);
+                } else {
+                    view.loadUrl(url);
+                }
                 return true;       
             }
 
@@ -95,7 +96,6 @@ public class CustomWebView {
             public void onPageFinished(WebView view, String url) {
                 mProgressBar.setVisibility(View.GONE);
                 view.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
-                view.loadUrl("javascript:window.APP_TITLE.getGalleryList(hhz_gallery)");
                 updateLeftButton();
 
                 updateCartNumber(url);
@@ -252,23 +252,7 @@ public class CustomWebView {
         /** retrieve the image list */
         @JavascriptInterface
         public void getGalleryList(final String gallery) {
-            Log.e(TAG, "gallery == " + gallery);
-            JSONArray jsonArray;
-            List<String> urls = new ArrayList<String>();
-            try {
-                jsonArray = new JSONArray(gallery);
-                if (jsonArray != null) { 
-                    int len = jsonArray.length();
-                    for (int i=0;i<len;i++){ 
-                        urls.add(jsonArray.get(i).toString());
-                    } 
-                 }
-            } catch (JSONException e) {
-                Log.e(TAG, "JSONException e: " + e.getMessage());
-                return;
-            }
-
-            ((UIUpdateInterface)mContext).onPhotoBrowserStart(urls);
+            ((UIUpdateInterface)mContext).onPhotoBrowserStart(gallery);
         }
        
     }

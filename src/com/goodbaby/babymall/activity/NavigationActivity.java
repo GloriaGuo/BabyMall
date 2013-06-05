@@ -1,8 +1,7 @@
 package com.goodbaby.babymall.activity;
 
-import java.util.List;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -172,9 +171,10 @@ public class NavigationActivity extends Activity
     }
 
     @Override
-    public void onPhotoBrowserStart(List<String> urls) {
-        // TODO Auto-generated method stub
-        
+    public void onPhotoBrowserStart(String urls) {
+        Intent intent = new Intent(NavigationActivity.this, GalleryActivity.class);
+        intent.putExtra("urls", urls);
+        startActivity(intent);
     }
 
 }

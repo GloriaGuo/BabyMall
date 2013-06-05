@@ -29,11 +29,12 @@
         </activity>
         <activity 
             android:name=".activity.AdvertisementActivity" 
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:label="@string/app_name" />
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
-            android:name=".activity.NavigationActivity"
-            android:label="@string/app_name" />
+            android:name=".activity.NavigationActivity" />
+        <activity
+            android:name=".activity.GalleryActivity" 
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
     </application>
 
 </manifest>
