@@ -140,13 +140,13 @@ public class TabsFragment extends Fragment implements OnTabChangeListener {
 	}
 
 	private void updateTab(String tabId, int placeholder) {	 
-	    FragmentManager fm = getFragmentManager();
-	    WebFragment wf = (WebFragment) fm.findFragmentByTag("web");
-	    if (null == wf) {
-            fm.beginTransaction().replace(placeholder, new WebFragment(tabId), "web").commit();
-	    } else {
-	        wf.updateUrl(tabId);
-	    }
+//	    FragmentManager fm = getFragmentManager();
+//	    CustomWebView wf = (CustomWebView) fm.findFragmentByTag("web");
+//	    if (null == wf) {
+//            fm.beginTransaction().replace(placeholder, new CustomWebView(tabId), "web").commit();
+//	    } else {
+//	        wf.updateUrl(tabId);
+//	    }
 	}
 
 	private final SensorEventListener mSensorListener = new SensorEventListener() {

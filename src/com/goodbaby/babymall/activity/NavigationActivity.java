@@ -10,14 +10,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
-import com.goodbaby.babymall.activity.WebFragment.UIUpdateInterface;
+import com.goodbaby.babymall.activity.CustomWebView.UIUpdateInterface;
 
 public class NavigationActivity extends FragmentActivity 
     implements UIUpdateInterface {
@@ -27,6 +27,7 @@ public class NavigationActivity extends FragmentActivity
     
     private MyHandler myHandler;
     private BadgeView mBadge;
+    private CustomWebView mCustomWebView;
     
     private static final int UPDATE_WHAT_TITLE = 0;
     private static final int UPDATE_WHAT_BADGE = 1;
@@ -43,7 +44,12 @@ public class NavigationActivity extends FragmentActivity
         setContentView(R.layout.activity_main);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
         
-        ImageView tw = (ImageView) ((TabWidget) findViewById(android.R.id.tabs)).getChildAt(3).findViewById(R.id.tab_image);
+        ((Button) findViewById(R.id.tab_button_2)).setBackgroundResource(R.drawable.tabbar_mainbtn);
+        
+        mCustomWebView = new CustomWebView();
+        mCustomWebView.init(this, R.id.wv, R.id.wv_progress);
+        
+        Button tw = (Button) findViewById(R.id.tab_button_3);
         mBadge = new BadgeView(NavigationActivity.this, tw);
         
         myHandler = new MyHandler();
