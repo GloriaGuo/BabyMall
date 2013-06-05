@@ -1,5 +1,7 @@
 package com.goodbaby.babymall.activity;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,7 +14,6 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goodbaby.babymall.BabyMallApplication;
@@ -31,8 +32,8 @@ public class NavigationActivity extends FragmentActivity
     
     private static final int UPDATE_WHAT_TITLE = 0;
     private static final int UPDATE_WHAT_BADGE = 1;
+    private static final int UPDATE_WHAT_LEFTBUTTON = 2;
     
-
     private static final String UPDATE_KEY_TITLE = "title";
     private static final String UPDATE_KEY_BADGE = "badge";
     
@@ -66,13 +67,18 @@ public class NavigationActivity extends FragmentActivity
     }
 
     @Override
-    public void onBadgeUpdate(int cartNumber) {
+    public void onBadgeUpdate(String cartNumber) {
         Bundle b = new Bundle();
-        b.putInt(UPDATE_KEY_BADGE, cartNumber);
+        b.putString(UPDATE_KEY_BADGE, cartNumber);
         Message msg = new Message();
         msg.what = UPDATE_WHAT_BADGE;
         msg.setData(b);
         this.myHandler.sendMessage(msg);
+    }
+    
+    @Override
+    public void onLeftButtonUpdate() {
+        this.myHandler.sendEmptyMessage(UPDATE_WHAT_LEFTBUTTON);
     }
     
     private class MyHandler extends Handler {
@@ -88,34 +94,36 @@ public class NavigationActivity extends FragmentActivity
                 tv_title.setText(msg.getData().getString(UPDATE_KEY_TITLE));
             }
             else if (msg.what == UPDATE_WHAT_BADGE) {
-                int cartNumber = msg.getData().getInt(UPDATE_KEY_BADGE);
-                mBadge.setText(String.valueOf(cartNumber));
+                mBadge.setText(msg.getData().getString(UPDATE_KEY_BADGE));
                 mBadge.setBackgroundResource(R.drawable.badge);
                 mBadge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
                 mBadge.setGravity(Gravity.CENTER);
                 mBadge.show();
-                Log.v(TAG, "cartNumber=" + cartNumber);
+            }
+            else if (msg.what == UPDATE_WHAT_LEFTBUTTON) {
+                ImageButton leftButton = (ImageButton) findViewById(R.id.imageButtonLeft);
+                if (mCustomWebView.getWebView().canGoBack()) {
+                    leftButton.setVisibility(View.VISIBLE);
+                } else {
+                    leftButton.setVisibility(View.GONE);
+                }
+               
+                leftButton.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        mCustomWebView.getWebView().goBack();
+                    }
+                    
+                });
             }
         }
     }
 
     @Override
-    public void onLeftButtonUpdate(final WebView view) {
-        ImageButton leftButton = (ImageButton) findViewById(R.id.imageButtonLeft);
-        if (view.canGoBack()) {
-            leftButton.setVisibility(View.VISIBLE);
-        } else {
-            leftButton.setVisibility(View.GONE);
-        }
-       
-        leftButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                view.goBack();
-            }
-            
-        });
+    public void onPhotoBrowserStart(List<String> urls) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

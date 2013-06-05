@@ -1,5 +1,11 @@
 package com.goodbaby.babymall.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -43,8 +49,9 @@ public class WebFragment extends Fragment {
 	
     public interface UIUpdateInterface {
         public void onTitleUpdate(String title);
-        public void onBadgeUpdate(int cartNumber);
-        public void onLeftButtonUpdate(WebView view);
+        public void onBadgeUpdate(String cartNumber);
+        public void onLeftButtonUpdate();
+        public void onPhotoBrowserStart(List<String> urls);
     }
     
 	/* (non-Javadoc)
@@ -124,7 +131,7 @@ public class WebFragment extends Fragment {
         mWebView.setWebViewClient(new WebViewClient(){  
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.v(TAG, url);
+                Log.v(TAG, "---> shouldOverrideUrlLoading === " + url);
 
                 mProgressBar.setVisibility(View.VISIBLE);
                 view.loadUrl(url);
@@ -136,9 +143,11 @@ public class WebFragment extends Fragment {
              */
             @Override
             public void onPageFinished(WebView view, String url) {
+                Log.v(TAG, "---> onPageFinished");
                 mProgressBar.setVisibility(View.GONE);
                 view.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
-                updateLeftButton(view);
+                view.loadUrl("javascript:window.APP_TITLE.getGalleryList(hhz_gallery)");
+                updateLeftButton();
 
                 updateCartNumber(url);
                 super.onPageFinished(view, url);
@@ -274,8 +283,8 @@ public class WebFragment extends Fragment {
 		return cart_number;
 	}
 
-	private void updateLeftButton(WebView view) {
-	    ((UIUpdateInterface)getActivity()).onLeftButtonUpdate(view);
+	private void updateLeftButton() {
+	    ((UIUpdateInterface)getActivity()).onLeftButtonUpdate();
 	}
 	
 	public class CustomJavaScriptInterface {
@@ -289,7 +298,30 @@ public class WebFragment extends Fragment {
         /** retrieve the cart number */
         @JavascriptInterface
         public void getCartNumber(final int cartTitle) {
-            ((UIUpdateInterface)getActivity()).onBadgeUpdate(cartTitle);
+            ((UIUpdateInterface)getActivity()).onBadgeUpdate(
+                    cartTitle >= 10 ? "N" : String.valueOf(cartTitle));
+        }
+        
+        /** retrieve the image list */
+        @JavascriptInterface
+        public void getGalleryList(final String gallery) {
+            Log.e(TAG, "gallery == " + gallery);
+            JSONArray jsonArray;
+            List<String> urls = new ArrayList<String>();
+            try {
+                jsonArray = new JSONArray(gallery);
+                if (jsonArray != null) { 
+                    int len = jsonArray.length();
+                    for (int i=0;i<len;i++){ 
+                        urls.add(jsonArray.get(i).toString());
+                    } 
+                 }
+            } catch (JSONException e) {
+                Log.e(TAG, "JSONException e: " + e.getMessage());
+                return;
+            }
+
+            ((UIUpdateInterface)getActivity()).onPhotoBrowserStart(urls);
         }
        
     }
