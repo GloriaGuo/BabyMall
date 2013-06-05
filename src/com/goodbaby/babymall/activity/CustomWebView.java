@@ -23,7 +23,6 @@ import android.widget.ProgressBar;
 
 import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
-import com.goodbaby.babymall.activity.WebFragment.UIUpdateInterface;
 
 public class CustomWebView {
 
@@ -37,11 +36,11 @@ public class CustomWebView {
 	private String mCurrentTab;
 	private CustomJavaScriptInterface mCustomJavaScriptInterface;
 	
-    public static final String TAB_HOME = "home";
-    public static final String TAB_CATALOGUE = "catalogue";
-    public static final String TAB_PROFILE = "profile";
-    public static final String TAB_CART = "cart";
-    public static final String TAB_MORE = "more";
+    public final String TAB_HOME = "home";
+    public final String TAB_CATALOGUE = "catalogue";
+    public final String TAB_PROFILE = "profile";
+    public final String TAB_CART = "cart";
+    public final String TAB_MORE = "more";
 
 	public CustomWebView() {
 	}
@@ -187,22 +186,22 @@ public class CustomWebView {
         this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_home));
     }
     
-    private void updateUrl(String tab) {
+    public void updateUrl(String tab) {
         mCurrentTab = tab;
 
-        if (mCurrentTab.endsWith(TabsFragment.TAB_HOME)) {
+        if (mCurrentTab.endsWith(TAB_HOME)) {
             this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_home));
         }
-        else if (mCurrentTab.endsWith(TabsFragment.TAB_CATALOGUE)) {
+        else if (mCurrentTab.endsWith(TAB_CATALOGUE)) {
             this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_catalogue));
         }
-        else if (mCurrentTab.endsWith(TabsFragment.TAB_PROFILE)) {
+        else if (mCurrentTab.endsWith(TAB_PROFILE)) {
             this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_profile));
         }
-        else if (mCurrentTab.endsWith(TabsFragment.TAB_CART)) {
+        else if (mCurrentTab.endsWith(TAB_CART)) {
             this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_cart));
         }
-        else if (mCurrentTab.endsWith(TabsFragment.TAB_MORE)) {
+        else if (mCurrentTab.endsWith(TAB_MORE)) {
             this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_more));
         }
         else {

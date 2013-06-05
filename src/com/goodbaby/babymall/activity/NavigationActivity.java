@@ -2,26 +2,26 @@ package com.goodbaby.babymall.activity;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
 import com.goodbaby.babymall.activity.CustomWebView.UIUpdateInterface;
 
-public class NavigationActivity extends FragmentActivity 
-    implements UIUpdateInterface {
+public class NavigationActivity extends Activity
+        implements UIUpdateInterface, OnClickListener{
 
     private static final String TAG = BabyMallApplication.getApplicationTag()
             + NavigationActivity.class.getSimpleName();
@@ -29,6 +29,7 @@ public class NavigationActivity extends FragmentActivity
     private MyHandler myHandler;
     private BadgeView mBadge;
     private CustomWebView mCustomWebView;
+    private LinearLayout mTabsLayout;
     private Button mTabButton0;
     private Button mTabButton1;
     private Button mTabButton2;
@@ -50,7 +51,7 @@ public class NavigationActivity extends FragmentActivity
         setContentView(R.layout.activity_main);
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
         
-        
+        initTab();
         mCustomWebView = new CustomWebView();
         mCustomWebView.init(this, R.id.wv, R.id.wv_progress);
         
@@ -58,25 +59,51 @@ public class NavigationActivity extends FragmentActivity
     }
     
     void initTab() {
+        mTabsLayout = (LinearLayout) findViewById(R.id.tabs);
         mTabButton0 = (Button) findViewById(R.id.tab_button_0);
         mTabButton1 = (Button) findViewById(R.id.tab_button_1);
         mTabButton2 = (Button) findViewById(R.id.tab_button_2);
         mTabButton3 = (Button) findViewById(R.id.tab_button_3);
         mTabButton4 = (Button) findViewById(R.id.tab_button_4);
-        
+
         mTabButton2.setBackgroundResource(R.drawable.tabbar_mainbtn);
-        mBadge = new BadgeView(NavigationActivity.this, mTabButton3);
+        mBadge = new BadgeView(this, mTabButton3);
+        
+        mTabButton0.setOnClickListener(this);
+        mTabButton1.setOnClickListener(this);
+        mTabButton2.setOnClickListener(this);
+        mTabButton3.setOnClickListener(this);
+        mTabButton4.setOnClickListener(this);
     }
     
-    OnClickListener mTabButtonListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View arg0) {
-            // TODO Auto-generated method stub
-            
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+        case R.id.tab_button_0:
+            mTabsLayout.setBackgroundResource(R.drawable.tabbar_0);
+            mCustomWebView.updateUrl(mCustomWebView.TAB_CATALOGUE);
+            break;
+        case R.id.tab_button_1:
+            mTabsLayout.setBackgroundResource(R.drawable.tabbar_1);
+            mCustomWebView.updateUrl(mCustomWebView.TAB_PROFILE);
+            break;
+        case R.id.tab_button_2:
+            mTabsLayout.setBackgroundResource(R.drawable.tabbar_2);
+            mCustomWebView.updateUrl(mCustomWebView.TAB_HOME);
+            break;
+        case R.id.tab_button_3:
+            mTabsLayout.setBackgroundResource(R.drawable.tabbar_3);
+            mCustomWebView.updateUrl(mCustomWebView.TAB_PROFILE);
+            break;
+        case R.id.tab_button_4:
+            mTabsLayout.setBackgroundResource(R.drawable.tabbar_4);
+            mCustomWebView.updateUrl(mCustomWebView.TAB_MORE);
+            break;
+        default:
+            Log.v(TAG, "should not get here");
+            break;
         }
-        
-    };
+    }
 
     @Override
     public void onTitleUpdate(String title) {
