@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -177,4 +178,13 @@ public class NavigationActivity extends Activity
         startActivity(intent);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) 
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && mCustomWebView.getWebView().canGoBack()) {
+            mCustomWebView.getWebView().goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
