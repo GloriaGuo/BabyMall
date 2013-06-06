@@ -3,11 +3,23 @@
 <resources>
     
     <string name="advertisement">http://m.haohaizi.com/synapi/mobile_splash</string>
-    <string name="tab_home">http://m.haohaizi.com/?inapp</string>
-    <string name="tab_catalogue">http://m.haohaizi.com/category.html?inapp</string>
-    <string name="tab_profile">http://m.haohaizi.com/member.html?inapp</string>
-    <string name="tab_cart">http://m.haohaizi.com/cart.html?inapp</string>
-    <string name="tab_more">http://m.haohaizi.com/inapp/more.html?inapp</string>
+    <string name="tab_home_url">http://m.haohaizi.com/?inapp</string>
+    <string name="tab_category_url">http://m.haohaizi.com/category.html?inapp</string>
+    <string name="tab_member_url">http://m.haohaizi.com/member.html?inapp</string>
+    <string name="tab_cart_url">http://m.haohaizi.com/cart.html?inapp</string>
+    <string name="tab_more_url">http://m.haohaizi.com/inapp/more.html?inapp</string>
+    <string name="add_receiver_url">http://m.haohaizi.com/member-add_receiver.html?inapp</string>
+    <string name="checkout_url">http://m.haohaizi.com/cart-checkout.html?inapp</string>
+    <string name="submit_url">http://m.haohaizi.com/order-create.html?inapp</string>
+    
+    <string name="home_url_path">"/"</string>
+    <string name="category_url_path">"/category.html"</string>
+    <string name="member_url_path">"/member.html"</string>
+    <string name="cart_url_path">"/cart.html"</string>
+    <string name="more_url_path">"/inapp/more.html"</string>
+    <string name="add_receiver_url_path">"/member-receiver"</string>
+    <string name="checkout_url_path">"/cart-checkout.html"</string>
+    <string name="pay_url_path">"/member-orderdetail-"</string>
     
     
 </resources>

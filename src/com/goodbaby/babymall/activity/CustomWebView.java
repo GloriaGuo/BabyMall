@@ -32,7 +32,12 @@ public class CustomWebView {
     public final String TAB_PROFILE = "profile";
     public final String TAB_CART = "cart";
     public final String TAB_MORE = "more";
-
+    
+    public final static String TITLE_BUTTON_SUBMIT_ORDER = "submit";
+    public final static String TITLE_BUTTON_PAY = "pay";
+    public final static String TITLE_BUTTON_SETTLE = "settle";
+    public final static String TITLE_BUTTON_ADD_ADDR = "add_addr";
+    
 	public CustomWebView() {
 	}
 	
@@ -182,26 +187,26 @@ public class CustomWebView {
 
     private void loadDefaultURL() {
         mCurrentTab = TAB_HOME;
-        this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_home));
+        this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_home_url));
     }
     
     public void updateUrl(String tab) {
         mCurrentTab = tab;
 
         if (mCurrentTab.endsWith(TAB_HOME)) {
-            this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_home));
+            this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_home_url));
         }
         else if (mCurrentTab.endsWith(TAB_CATALOGUE)) {
-            this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_catalogue));
+            this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_category_url));
         }
         else if (mCurrentTab.endsWith(TAB_PROFILE)) {
-            this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_profile));
+            this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_member_url));
         }
         else if (mCurrentTab.endsWith(TAB_CART)) {
-            this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_cart));
+            this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_cart_url));
         }
         else if (mCurrentTab.endsWith(TAB_MORE)) {
-            this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_more));
+            this.mWebView.loadUrl(mContext.getResources().getString(R.string.tab_more_url));
         }
         else {
             Log.v(TAG, "got tag=" + mCurrentTab);
@@ -223,5 +228,21 @@ public class CustomWebView {
             ((UIUpdateInterface)mContext).onPhotoBrowserStart(gallery);
         }
        
+    }
+    
+    public void handleButtonSubmit() {
+        mWebView.loadUrl(mContext.getString(R.string.submit_url));
+    }
+    
+    public void handleButtonPay() {
+        
+    }
+    
+    public void handleButtonCheckout() {
+        mWebView.loadUrl(mContext.getString(R.string.checkout_url));
+    }
+    
+    public void handleButtonAddReceiber() {
+        mWebView.loadUrl(mContext.getString(R.string.add_receiver_url));
     }
 }

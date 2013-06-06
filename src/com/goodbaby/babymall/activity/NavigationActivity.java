@@ -41,6 +41,7 @@ public class NavigationActivity extends Activity
     private Button mTabButton2;
     private Button mTabButton3;
     private Button mTabButton4;
+    private Button mTitleButtonRight;
     
     private static final int UPDATE_WHAT_TITLE = 0;
     private static final int UPDATE_WHAT_UI_PAGE_START = 1;
@@ -48,6 +49,8 @@ public class NavigationActivity extends Activity
     
     private static final String UPDATE_KEY_TITLE = "title";
     private static final String UPDATE_KEY_URL = "url";
+    
+    private int mCartNumber = 0;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class NavigationActivity extends Activity
         initTab();
         mProgressBar = (ProgressBar) findViewById(R.id.wv_progress);
 
+        mTitleButtonRight = (Button) findViewById(R.id.imageButtonRight);
         mCustomWebView = new CustomWebView();
         mCustomWebView.init(this, R.id.wv);
         
@@ -158,30 +162,51 @@ public class NavigationActivity extends Activity
                 // update tab
                 try {
                     String path = new URL(url).getPath();
-                    if (path.equalsIgnoreCase(BabyMallApplication.TAB_CATEGORY_URL_PATH)) {
+                    if (path.equalsIgnoreCase(getString(R.string.category_url_path))) {
+                        disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_0);
-                    }else if (path.equalsIgnoreCase(BabyMallApplication.TAB_MEMBER_URL_PATH)) {
+                    }
+                    else if (path.equalsIgnoreCase(getString(R.string.member_url_path))) {
+                        disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_1);
-                    }else if (path.equalsIgnoreCase(BabyMallApplication.TAB_HOME_URL_PATH)) {
+                    }
+                    else if (path.equalsIgnoreCase(getString(R.string.home_url_path))) {
+                        disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_2);
-                    }else if (path.equalsIgnoreCase(BabyMallApplication.TAB_CART_URL_PATH)) {
+                    }
+                    else if (path.equalsIgnoreCase(getString(R.string.cart_url_path))) {
+                        updateTitleButtonCheckout();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_3);
-                    }else if (path.equalsIgnoreCase(BabyMallApplication.TAB_MORE_URL_PATH)) {
+                    }
+                    else if (path.equalsIgnoreCase(getString(R.string.more_url_path))) {
+                        disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_4);
+                    }
+                    else if (path.contains(getString(R.string.add_receiver_url_path))) {
+                        updateTitleButtonAddReceiver();
+                    }
+                    else if (path.contains(getString(R.string.checkout_url_path))) {
+                        updateTitleButtonSubmit();
+                    }
+                    else if (path.contains(getString(R.string.pay_url_path))) {
+                        updateTitleButtonPay();
                     }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
                 
                 // update cart number
-                int cart_number = getCartNumber(url);
-                if (cart_number > 0) {
-                    String cartText = cart_number >= 10 ? "N" : String.valueOf(cart_number);
+                mCartNumber = getCartNumber(url);
+                if (mCartNumber > 0) {
+                    String cartText = mCartNumber >= 10 ? "N" : String.valueOf(mCartNumber);
                     mBadge.setText(cartText);
                     mBadge.setBackgroundResource(R.drawable.badge);
                     mBadge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
                     mBadge.setGravity(Gravity.CENTER);
                     mBadge.show();
+                }
+                else {
+                    mBadge.hide();
                 }
                 
                 // disable progress bar
@@ -192,6 +217,56 @@ public class NavigationActivity extends Activity
                 mProgressBar.setVisibility(View.VISIBLE);
             }
         }
+    }
+    
+    public void disableTitleButtonRight() {
+        mTitleButtonRight.setVisibility(View.GONE);
+    }
+    
+    public void updateTitleButtonCheckout() {
+        if (mCartNumber > 0) {
+            mTitleButtonRight.setText(R.string.nav_button_right_checkout);
+            mTitleButtonRight.setVisibility(View.VISIBLE);
+            mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCustomWebView.handleButtonCheckout();
+                }
+            });
+        }
+    }
+    
+    public void updateTitleButtonAddReceiver() {
+        mTitleButtonRight.setText(R.string.nav_button_right_add_receiver);
+        mTitleButtonRight.setVisibility(View.VISIBLE);
+        mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomWebView.handleButtonAddReceiber();
+            }
+        });
+    }
+    
+    public void updateTitleButtonSubmit() {
+        mTitleButtonRight.setText(R.string.nav_button_right_submit);
+        mTitleButtonRight.setVisibility(View.VISIBLE);
+        mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomWebView.handleButtonSubmit();
+            }
+        });
+    }
+    
+    public void updateTitleButtonPay() {
+        mTitleButtonRight.setText(R.string.nav_button_right_pay);
+        mTitleButtonRight.setVisibility(View.VISIBLE);
+        mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomWebView.handleButtonPay();
+            }
+        });
     }
 
     @Override
@@ -240,8 +315,14 @@ public class NavigationActivity extends Activity
             int start = cookies.indexOf(BabyMallApplication.CART_NUMBER) + 
                     BabyMallApplication.CART_NUMBER.length() + 1;
             int end = cookies.indexOf(';', start);
-            cart_number = Integer.parseInt(cookies.substring(start, end));
-            Log.d(TAG, "Have CART_NUMBER=" + cart_number);
+            if (start > cookies.length() || end > cookies.length()
+                    || start < 0 || end <= 0 || start > end) {
+                cart_number = 0;
+            }
+            else {
+                cart_number = Integer.parseInt(cookies.substring(start, end));
+                Log.d(TAG, "Have CART_NUMBER=" + cart_number);
+            }
         }
         return cart_number;
     }
