@@ -24,7 +24,9 @@ public class BabyMallApplication extends Application {
     public static final String TAB_MEMBER_URL_PATH = "/member.html";
     public static final String TAB_CART_URL_PATH = "/cart.html";
     public static final String TAB_MORE_URL_PATH = "/inapp/more.html";
-    
+   
+    public static final String CART_NUMBER = "S[CART_NUMBER]";
+
     
     /**
      * The application context

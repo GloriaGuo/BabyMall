@@ -1,6 +1,7 @@
 package com.goodbaby.babymall.activity;
 
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class GalleryActivity extends Activity
     private static final String TAG = BabyMallApplication.getApplicationTag()
             + GalleryActivity.class.getSimpleName();
     
-    private static HashMap<String,Bitmap> imagesCache = new HashMap<String, Bitmap>(); 
+    private static HashMap<String, SoftReference<Bitmap>> imagesCache = new HashMap<String, SoftReference<Bitmap>>(); 
     
     private MyGallery mMainGallery;
     private ImageAdapter mImageAdapter;
@@ -149,31 +150,27 @@ public class GalleryActivity extends Activity
       
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {  
-            Bitmap image = null;  
+            SoftReference<Bitmap> image = null;  
             
             image = imagesCache.get(imageUrls.get(position));
             if (image == null) {
-                LoadImageTask task = new LoadImageTask(convertView);  
+                LoadImageTask task = new LoadImageTask();  
                 task.execute(imageUrls.get(position)); 
             } 
             
             ImageView imageView = new ImageView(context);
-            imageView.setImageBitmap(image); 
-            imageView.setBackgroundResource(R.drawable.picture_frame);
+            imageView.setImageBitmap(image.get()); 
             imageView.setDrawingCacheEnabled(true);
             imageView.setAdjustViewBounds(true);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             imageView.setLayoutParams(new Gallery.LayoutParams(
-                    LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       
             return imageView;  
         }  
       
         class LoadImageTask extends AsyncTask<String,Void,Bitmap> {  
-            private View resultView;  
       
-            LoadImageTask(View resultView) {  
-                this.resultView = resultView;  
+            LoadImageTask() {  
             }  
 
             @Override  
@@ -185,7 +182,7 @@ public class GalleryActivity extends Activity
                     conn.connect();  
                     InputStream is = conn.getInputStream();  
                     bitmap = BitmapFactory.decodeStream(is); 
-                    imagesCache.put(params[0], bitmap);
+//                    imagesCache.put(params[0], bitmap);
                     is.close();  
                 } catch (Exception e) {  
                     Log.e(TAG, "Download image failed : " + e.getMessage());  

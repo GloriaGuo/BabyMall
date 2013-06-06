@@ -1,14 +1,10 @@
 package com.goodbaby.babymall.activity;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
-import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
@@ -17,7 +13,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 
 import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
@@ -27,10 +22,8 @@ public class CustomWebView {
 	private static final String TAG = BabyMallApplication.getApplicationTag()
 	        + CustomWebView.class.getSimpleName();
 
-	private static final String CART_NUMBER = "S[CART_NUMBER]";
 	private Context mContext;
     private WebView mWebView;
-    private ProgressBar mProgressBar;
 	private String mCurrentTab;
 	private CustomJavaScriptInterface mCustomJavaScriptInterface;
 	
@@ -45,18 +38,16 @@ public class CustomWebView {
 	
     public interface UIUpdateInterface {
         public void onTitleUpdate(String title);
-        public void onBadgeUpdate(String cartNumber);
-        public void onLeftButtonUpdate();
         public void onPhotoBrowserStart(String urls);
-        public void onTabUpdate(String path);
+        public void onWebPageStart();
+        public void onWebPageFinished(String url);
     }
     
-    public void init(Context context, int webViewId, int processId) {
+    public void init(Context context, int webViewId) {
         Log.d(TAG, "---> onCreateView");
 
         mContext = context;
         mWebView = (WebView) ((Activity) mContext).findViewById(webViewId);
-        mProgressBar = (ProgressBar) ((Activity) mContext).findViewById(processId);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.requestFocus();
         mWebView.getSettings().setLoadWithOverviewMode(true);
@@ -82,11 +73,9 @@ public class CustomWebView {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(TAG, "---> shouldOverrideUrlLoading url == " + url);
 
-                mProgressBar.setVisibility(View.VISIBLE);
                 if (MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("jpg") ||
                     MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("png")) {
                     view.loadUrl("javascript:window.APP_TITLE.getGalleryList(hhz_gallery)");
-                    mProgressBar.setVisibility(View.GONE);
                 } else {
                     view.loadUrl(url);
                 }
@@ -99,18 +88,7 @@ public class CustomWebView {
              */
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                try {
-                    String path = new URL(url).getPath();
-                    if (path.equalsIgnoreCase(BabyMallApplication.TAB_HOME_URL_PATH) ||
-                        path.equalsIgnoreCase(BabyMallApplication.TAB_CATEGORY_URL_PATH) ||
-                        path.equalsIgnoreCase(BabyMallApplication.TAB_MEMBER_URL_PATH) ||
-                        path.equalsIgnoreCase(BabyMallApplication.TAB_CART_URL_PATH) ||
-                        path.equalsIgnoreCase(BabyMallApplication.TAB_MORE_URL_PATH)) {
-                        updateTab(path);
-                    }
-                } catch (MalformedURLException e) {
-                    Log.e(TAG, "Invalid url : " + e.getMessage());
-                }
+                ((UIUpdateInterface) mContext).onWebPageStart();
             }
 
             /* (non-Javadoc)
@@ -118,10 +96,8 @@ public class CustomWebView {
              */
             @Override
             public void onPageFinished(WebView view, String url) {
-                mProgressBar.setVisibility(View.GONE);
                 view.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
-                updateLeftButton();
-                updateCartNumber(url);
+                ((UIUpdateInterface) mContext).onWebPageFinished(url);
                 super.onPageFinished(view, url);
             }
 
@@ -232,36 +208,8 @@ public class CustomWebView {
         }
 
     }
-        
-    private void updateCartNumber(String url) {
-		int cart_number = getCartNumber(url);
-		if (cart_number > 0) {
-		    mCustomJavaScriptInterface.getCartNumber(cart_number);
-		}
-	}
-
-	private int getCartNumber(String url) {
-		int cart_number = 0;
-		CookieManager cookieManager = CookieManager.getInstance();
-		String cookies = cookieManager.getCookie(url);
-		if (null != cookies && cookies.contains(CART_NUMBER)) {
-			int start = cookies.indexOf(CART_NUMBER) + CART_NUMBER.length() + 1;
-			int end = cookies.indexOf(';', start);
-			cart_number = Integer.parseInt(cookies.substring(start, end));
-			Log.d(TAG, "Have CART_NUMBER=" + cart_number);
-		}
-		return cart_number;
-	}
-
-	private void updateLeftButton() {
-	    ((UIUpdateInterface) mContext).onLeftButtonUpdate();
-	}
-	
-	private void updateTab(String path) {
-	    ((UIUpdateInterface) mContext).onTabUpdate(path);
-	}
-	
-	public class CustomJavaScriptInterface {
+    
+    public class CustomJavaScriptInterface {
 
         /** retrieve the app title */
     	@JavascriptInterface
@@ -269,13 +217,6 @@ public class CustomWebView {
     	    ((UIUpdateInterface) mContext).onTitleUpdate(title);
         }
     	
-        /** retrieve the cart number */
-        @JavascriptInterface
-        public void getCartNumber(final int cartTitle) {
-            ((UIUpdateInterface) mContext).onBadgeUpdate(
-                    cartTitle >= 10 ? "N" : String.valueOf(cartTitle));
-        }
-        
         /** retrieve the image list */
         @JavascriptInterface
         public void getGalleryList(final String gallery) {
