@@ -39,9 +39,11 @@ public class NavigationActivity extends Activity
     private static final int UPDATE_WHAT_TITLE = 0;
     private static final int UPDATE_WHAT_BADGE = 1;
     private static final int UPDATE_WHAT_LEFTBUTTON = 2;
+    private static final int UPDATE_WHAT_TAB = 4;
     
     private static final String UPDATE_KEY_TITLE = "title";
     private static final String UPDATE_KEY_BADGE = "badge";
+    private static final String UPDATE_KEY_TAB = "tab";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +84,7 @@ public class NavigationActivity extends Activity
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.tab_button_0:
-            mTabsLayout.setBackgroundResource(R.drawable.tabbar_0);
+//            mTabsLayout.setBackgroundResource(R.drawable.tabbar_0);
             mCustomWebView.updateUrl(mCustomWebView.TAB_CATALOGUE);
             break;
         case R.id.tab_button_1:
@@ -90,15 +92,15 @@ public class NavigationActivity extends Activity
             mCustomWebView.updateUrl(mCustomWebView.TAB_PROFILE);
             break;
         case R.id.tab_button_2:
-            mTabsLayout.setBackgroundResource(R.drawable.tabbar_2);
+//            mTabsLayout.setBackgroundResource(R.drawable.tabbar_2);
             mCustomWebView.updateUrl(mCustomWebView.TAB_HOME);
             break;
         case R.id.tab_button_3:
-            mTabsLayout.setBackgroundResource(R.drawable.tabbar_3);
+//            mTabsLayout.setBackgroundResource(R.drawable.tabbar_3);
             mCustomWebView.updateUrl(mCustomWebView.TAB_CART);
             break;
         case R.id.tab_button_4:
-            mTabsLayout.setBackgroundResource(R.drawable.tabbar_4);
+//            mTabsLayout.setBackgroundResource(R.drawable.tabbar_4);
             mCustomWebView.updateUrl(mCustomWebView.TAB_MORE);
             break;
         default:
@@ -168,6 +170,20 @@ public class NavigationActivity extends Activity
                     
                 });
             }
+            else if (msg.what == UPDATE_WHAT_TAB) {
+                String path = msg.getData().getString(UPDATE_KEY_TAB);
+                if (path.equalsIgnoreCase(BabyMallApplication.TAB_CATEGORY_URL_PATH)) {
+                    mTabsLayout.setBackgroundResource(R.drawable.tabbar_0);
+                }else if (path.equalsIgnoreCase(BabyMallApplication.TAB_MEMBER_URL_PATH)) {
+                    mTabsLayout.setBackgroundResource(R.drawable.tabbar_1);
+                }else if (path.equalsIgnoreCase(BabyMallApplication.TAB_HOME_URL_PATH)) {
+                    mTabsLayout.setBackgroundResource(R.drawable.tabbar_2);
+                }else if (path.equalsIgnoreCase(BabyMallApplication.TAB_CART_URL_PATH)) {
+                    mTabsLayout.setBackgroundResource(R.drawable.tabbar_3);
+                }else if (path.equalsIgnoreCase(BabyMallApplication.TAB_MORE_URL_PATH)) {
+                    mTabsLayout.setBackgroundResource(R.drawable.tabbar_4);
+                }
+            }
         }
     }
 
@@ -177,14 +193,31 @@ public class NavigationActivity extends Activity
         intent.putExtra("urls", urls);
         startActivity(intent);
     }
+    
+    @Override
+    public void onTabUpdate(String path) {
+        Bundle b = new Bundle();
+        b.putString(UPDATE_KEY_TAB, path);
+        Message msg = new Message();
+        msg.what = UPDATE_WHAT_TAB;
+        msg.setData(b);
+        this.myHandler.sendMessage(msg);
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) 
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && mCustomWebView.getWebView().canGoBack()) {
-            mCustomWebView.getWebView().goBack();
-            return true;
+            if (canGoBack(mCustomWebView.getWebView().getUrl())) {
+                mCustomWebView.getWebView().goBack();
+                return true;
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
+    
+    private Boolean canGoBack(String url) {
+        return true;
+    }
+
 }

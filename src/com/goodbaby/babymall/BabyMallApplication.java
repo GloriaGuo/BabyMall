@@ -19,7 +19,12 @@ public class BabyMallApplication extends Application {
     
     public static final String ADVERTISEMENT_IMAGE = "advertisement.png";
     
-    public static final boolean DEBUG = true;
+    public static final String TAB_HOME_URL_PATH = "/";
+    public static final String TAB_CATEGORY_URL_PATH = "/category.html";
+    public static final String TAB_MEMBER_URL_PATH = "/member.html";
+    public static final String TAB_CART_URL_PATH = "/cart.html";
+    public static final String TAB_MORE_URL_PATH = "/inapp/more.html";
+    
     
     /**
      * The application context

@@ -1,5 +1,8 @@
 package com.goodbaby.babymall.activity;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -45,6 +48,7 @@ public class CustomWebView {
         public void onBadgeUpdate(String cartNumber);
         public void onLeftButtonUpdate();
         public void onPhotoBrowserStart(String urls);
+        public void onTabUpdate(String path);
     }
     
     public void init(Context context, int webViewId, int processId) {
@@ -76,7 +80,7 @@ public class CustomWebView {
         mWebView.setWebViewClient(new WebViewClient(){  
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.v(TAG, url);
+                Log.d(TAG, "---> shouldOverrideUrlLoading url == " + url);
 
                 mProgressBar.setVisibility(View.VISIBLE);
                 if (MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("jpg") ||
@@ -86,7 +90,27 @@ public class CustomWebView {
                 } else {
                     view.loadUrl(url);
                 }
+                
                 return true;       
+            }
+            
+            /* (non-Javadoc)
+             * @see android.webkit.WebViewClient#onPageStarted(android.webkit.WebView, java.lang.String)
+             */
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                try {
+                    String path = new URL(url).getPath();
+                    if (path.equalsIgnoreCase(BabyMallApplication.TAB_HOME_URL_PATH) ||
+                        path.equalsIgnoreCase(BabyMallApplication.TAB_CATEGORY_URL_PATH) ||
+                        path.equalsIgnoreCase(BabyMallApplication.TAB_MEMBER_URL_PATH) ||
+                        path.equalsIgnoreCase(BabyMallApplication.TAB_CART_URL_PATH) ||
+                        path.equalsIgnoreCase(BabyMallApplication.TAB_MORE_URL_PATH)) {
+                        updateTab(path);
+                    }
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "Invalid url : " + e.getMessage());
+                }
             }
 
             /* (non-Javadoc)
@@ -97,7 +121,6 @@ public class CustomWebView {
                 mProgressBar.setVisibility(View.GONE);
                 view.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
                 updateLeftButton();
-
                 updateCartNumber(url);
                 super.onPageFinished(view, url);
             }
@@ -232,6 +255,10 @@ public class CustomWebView {
 
 	private void updateLeftButton() {
 	    ((UIUpdateInterface) mContext).onLeftButtonUpdate();
+	}
+	
+	private void updateTab(String path) {
+	    ((UIUpdateInterface) mContext).onTabUpdate(path);
 	}
 	
 	public class CustomJavaScriptInterface {
