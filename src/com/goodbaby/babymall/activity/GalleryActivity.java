@@ -11,9 +11,6 @@ import java.util.Map.Entry;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.goodbaby.babymall.BabyMallApplication;
-import com.goodbaby.babymall.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -31,9 +28,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
-import android.widget.ImageView;
 import android.widget.Gallery.LayoutParams;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.goodbaby.babymall.BabyMallApplication;
+import com.goodbaby.babymall.R;
 
 public class GalleryActivity extends Activity 
     implements AdapterView.OnItemSelectedListener, View.OnClickListener {

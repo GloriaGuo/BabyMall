@@ -4,7 +4,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.CookieManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -52,6 +54,9 @@ public class NavigationActivity extends Activity
     
     private int mCartNumber = 0;
     
+    private SensorManager mSensorManager;
+    private ShakeEventListener mSensorListener;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +73,39 @@ public class NavigationActivity extends Activity
         mCustomWebView.init(this, R.id.wv);
         
         myHandler = new MyHandler();
+        
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorListener = new ShakeEventListener();   
+
+        mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+
+            public void onShake() {
+                mTabsLayout.setBackgroundResource(R.drawable.tabbar_3);
+                mCustomWebView.updateUrl(mCustomWebView.TAB_CART);
+            }
+        });
     }
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onPause()
+     */
+    @Override
+    protected void onPause() {
+        mSensorManager.unregisterListener(mSensorListener);
+        super.onPause();
+    }
+
+    /* (non-Javadoc)
+     * @see android.app.Activity#onResume()
+     */
+    @Override
+    protected void onResume() {
+        mSensorManager.registerListener(mSensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_UI);
+        super.onResume();
+    }
+
     void initTab() {
         mTabsLayout = (LinearLayout) findViewById(R.id.tabs);
         mTabButton0 = (Button) findViewById(R.id.tab_button_0);
@@ -87,7 +123,6 @@ public class NavigationActivity extends Activity
         
         mBadge = new BadgeView(this, mTabButton3);
         mBadge.setBackgroundResource(R.drawable.badge);
-        
     }
     
     @Override
@@ -206,6 +241,7 @@ public class NavigationActivity extends Activity
                     mBadge.setText(cartText);
                     mBadge.setBackgroundResource(R.drawable.badge);
                     mBadge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+                    mBadge.setBadgeMargin(25, 23);
                     mBadge.setGravity(Gravity.CENTER);
                     mBadge.show();
                 }
