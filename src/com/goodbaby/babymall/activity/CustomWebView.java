@@ -26,6 +26,7 @@ public class CustomWebView {
     private WebView mWebView;
 	private String mCurrentTab;
 	private CustomJavaScriptInterface mCustomJavaScriptInterface;
+	private String mClickedUrl;
 	
     public final String TAB_HOME = "home";
     public final String TAB_CATALOGUE = "catalogue";
@@ -43,7 +44,7 @@ public class CustomWebView {
 	
     public interface UIUpdateInterface {
         public void onTitleUpdate(String title);
-        public void onPhotoBrowserStart(String urls);
+        public void onPhotoBrowserStart(String urls, String clickedUrl);
         public void onWebPageStart();
         public void onWebPageFinished(String url);
     }
@@ -80,6 +81,7 @@ public class CustomWebView {
 
                 if (MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("jpg") ||
                     MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("png")) {
+                    mClickedUrl = url;
                     view.loadUrl("javascript:window.APP_TITLE.getGalleryList(hhz_gallery)");
                 } else {
                     view.loadUrl(url);
@@ -225,7 +227,7 @@ public class CustomWebView {
         /** retrieve the image list */
         @JavascriptInterface
         public void getGalleryList(final String gallery) {
-            ((UIUpdateInterface)mContext).onPhotoBrowserStart(gallery);
+            ((UIUpdateInterface)mContext).onPhotoBrowserStart(gallery, mClickedUrl);
         }
        
     }

@@ -1,9 +1,11 @@
 package com.goodbaby.babymall;
 
 import java.io.File;
+import java.io.FileOutputStream;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
@@ -72,8 +74,29 @@ public class BabyMallApplication extends Application {
             apk.delete();
         } 
         
+        File dir = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH);
+        dir.mkdirs();
+        
         // Configuration
         mConfiguration = new BabyMallConfiguration(mContext);
+    }
+    
+    public static void saveBitmapToFile(String name, Bitmap bitmap) {      
+        File f = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH + name);
+        FileOutputStream fOut = null;
+        try {
+            if (f.exists()) {
+                Log.d(mApplicationTag, "Remove the previous file.");
+                f.delete();
+            }
+            f.createNewFile();
+            fOut = new FileOutputStream(f);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+            Log.e(mApplicationTag, "Create the advertisement file failed: " + e.getMessage());
+        }
     }
 
 }

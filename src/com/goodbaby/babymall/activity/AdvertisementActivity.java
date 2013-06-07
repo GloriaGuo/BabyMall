@@ -2,6 +2,7 @@ package com.goodbaby.babymall.activity;
     
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -28,22 +29,28 @@ public class AdvertisementActivity extends Activity {
         try {
             fis = new FileInputStream(
                     BabyMallApplication.EXTERNAL_STORAGE_PATH + BabyMallApplication.ADVERTISEMENT_IMAGE);
+            final Bitmap bitmap = BitmapFactory.decodeStream(fis);
+            fis.close();
+            
+            ImageView mAdvertismentImage = (ImageView) findViewById(R.id.image_advertisment);
+            mAdvertismentImage.setImageBitmap(bitmap);
+            
+            new Handler().postDelayed(new Runnable(){  
+                @Override  
+                public void run() {
+                    bitmap.recycle();
+                    Intent mainIntent = new Intent(AdvertisementActivity.this, NavigationActivity.class);  
+                    AdvertisementActivity.this.startActivity(mainIntent);  
+                    AdvertisementActivity.this.finish();  
+                }  
+            }, 2000);
         } catch (FileNotFoundException e) {
             Log.e(TAG, "Read the advertisement file failed: " + e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG, "Read the advertisement file failed: " + e.getMessage());
         }
-        Bitmap bitmap = BitmapFactory.decodeStream(fis);
         
-        ImageView mAdvertismentImage = (ImageView) findViewById(R.id.image_advertisment);
-        mAdvertismentImage.setImageBitmap(bitmap);
         
-        new Handler().postDelayed(new Runnable(){  
-            @Override  
-            public void run() {
-                Intent mainIntent = new Intent(AdvertisementActivity.this, NavigationActivity.class);  
-                AdvertisementActivity.this.startActivity(mainIntent);  
-                AdvertisementActivity.this.finish();  
-            }  
-        }, 2000);
     }
 
 }

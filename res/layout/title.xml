@@ -4,13 +4,16 @@
     android:layout_height="fill_parent"
     >
       
-    <ImageButton
+    <Button
         android:id="@+id/imageButtonLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:paddingLeft="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="15dp"
+        android:text="@string/back_button_text"
         android:background="@drawable/navbarbackbtn"
         android:visibility="gone"
         />  
@@ -32,8 +35,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/navbarbtn"
-        android:visibility="gone"
+        android:textSize="15dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/navbarbtn"
+        android:visibility="gone" 
         />
 
 </RelativeLayout>

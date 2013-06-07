@@ -1,7 +1,5 @@
 package com.goodbaby.babymall.activity;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -58,6 +56,9 @@ public class LoadActivity extends Activity {
     @Override  
     protected void onDestroy() {
         isAlive = false;
+        if (null != mAdvertisementBitmap) {
+            mAdvertisementBitmap.recycle();
+        }
         super.onDestroy();
     }
     
@@ -78,7 +79,7 @@ public class LoadActivity extends Activity {
             bitmap = BitmapFactory.decodeStream(is);
             is.close();
         } catch (Exception e) {
-            Log.e(TAG, "Open the advertisement icon failed: " + e.getMessage());
+            Log.e(TAG, "Open the advertisement image failed: " + e.getMessage());
         }
 
         return bitmap;
@@ -98,27 +99,6 @@ public class LoadActivity extends Activity {
         mErrorDialog.setOwnerActivity(this);
     }
     
-    private void saveBitmapToFile(Bitmap bitmap) {
-        File dir = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH);
-        dir.mkdirs();
-        
-        File f = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH + BabyMallApplication.ADVERTISEMENT_IMAGE);
-        FileOutputStream fOut = null;
-        try {
-            if (f.exists()) {
-                Log.d(TAG, "Remove the previous file.");
-                f.delete();
-            }
-            f.createNewFile();
-            fOut = new FileOutputStream(f);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-            fOut.flush();
-            fOut.close();
-        } catch (Exception e) {
-            Log.e(TAG, "Create the advertisement file failed: " + e.getMessage());
-        }
-    }
-    
     private class MyHandler extends Handler {
         public MyHandler() {
         }
@@ -134,7 +114,8 @@ public class LoadActivity extends Activity {
             if (null == mAdvertisementBitmap) {
                 showAlert(R.string.alert_advertisement_download_failed);
             } else {
-                saveBitmapToFile(mAdvertisementBitmap);
+                BabyMallApplication.saveBitmapToFile(
+                        BabyMallApplication.ADVERTISEMENT_IMAGE, mAdvertisementBitmap);
                 Intent intent = new Intent(LoadActivity.this, AdvertisementActivity.class);  
                 LoadActivity.this.startActivity(intent);  
                 LoadActivity.this.finish();  

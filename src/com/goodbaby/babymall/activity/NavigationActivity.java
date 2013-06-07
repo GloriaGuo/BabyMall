@@ -141,27 +141,31 @@ public class NavigationActivity extends Activity
                 tv_title.setText(msg.getData().getString(UPDATE_KEY_TITLE));
             }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_FINISH) {
-                // update left Button
-                ImageButton leftButton = (ImageButton) findViewById(R.id.imageButtonLeft);
-                if (mCustomWebView.getWebView().canGoBack()) {
-                    leftButton.setVisibility(View.VISIBLE);
-                } else {
-                    leftButton.setVisibility(View.GONE);
-                }
-               
-                leftButton.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        mCustomWebView.getWebView().goBack();
-                    }
-                    
-                });
-                
                 String url = msg.getData().getString(UPDATE_KEY_URL);
-                // update tab
                 try {
                     String path = new URL(url).getPath();
+                    // update left Button
+                    Button leftButton = (Button) findViewById(R.id.imageButtonLeft);
+                    if (mCustomWebView.getWebView().canGoBack()) {
+                        if (path.equalsIgnoreCase(getString(R.string.home_url_path))) {
+                            leftButton.setVisibility(View.GONE);
+                        } else {
+                            leftButton.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        leftButton.setVisibility(View.GONE);
+                    }
+                   
+                    leftButton.setOnClickListener(new OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            mCustomWebView.getWebView().goBack();
+                        }
+                        
+                    });
+                    
+                    // update tab
                     if (path.equalsIgnoreCase(getString(R.string.category_url_path))) {
                         disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_0);
@@ -192,7 +196,7 @@ public class NavigationActivity extends Activity
                         updateTitleButtonPay();
                     }
                 } catch (MalformedURLException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Invalie url : " + e.getMessage());
                 }
                 
                 // update cart number
@@ -270,9 +274,9 @@ public class NavigationActivity extends Activity
     }
 
     @Override
-    public void onPhotoBrowserStart(String urls) {
+    public void onPhotoBrowserStart(String urls, String clickedUrl) {
         Intent intent = new Intent(NavigationActivity.this, GalleryActivity.class);
-        intent.putExtra("urls", urls);
+        intent.putExtra("urls", urls + "\n" + clickedUrl);
         startActivity(intent);
     }
     
@@ -304,6 +308,15 @@ public class NavigationActivity extends Activity
     }
     
     private Boolean canGoBack(String url) {
+        String path = null;
+        try {
+            path = new URL(url).getPath();
+        } catch (MalformedURLException e) {
+            return true;
+        }
+        if (path.equalsIgnoreCase(getString(R.string.home_url_path))) {
+            return false;
+        }
         return true;
     }
     
