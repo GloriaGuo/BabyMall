@@ -1,7 +1,10 @@
 package com.goodbaby.babymall.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
@@ -144,9 +147,18 @@ public class CustomWebView {
              */
             @Override
             public boolean onJsAlert(WebView view, String url, String message,
-                    JsResult result) {
-
-                return super.onJsAlert(view, url, message, result);
+                    final JsResult result) {
+                Builder builder = new Builder(mContext).
+                        setMessage(message).
+                        setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                result.confirm();   
+                            }
+                        }).
+                        setCancelable(false);
+                builder.create().show();
+                return true;
             }
 
             /* (non-Javadoc)
@@ -154,8 +166,24 @@ public class CustomWebView {
              */
             @Override
             public boolean onJsConfirm(WebView view, String url,
-                    String message, JsResult result) {
-                return super.onJsConfirm(view, url, message, result);
+                    String message, final JsResult result) {
+                Builder builder = new Builder(mContext).
+                        setMessage(message).
+                        setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                result.confirm();
+                            }
+                        }).
+                        setNeutralButton(android.R.string.cancel, new AlertDialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                result.cancel();
+                            }
+                        }).
+                        setCancelable(false);
+                builder.create().show();
+                return true;
             }
 
             /* (non-Javadoc)
