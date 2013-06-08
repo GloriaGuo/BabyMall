@@ -71,7 +71,7 @@ public class LoadActivity extends Activity {
             HttpURLConnection conn;
             conn = (HttpURLConnection)mRemoteUrl.openConnection();
             
-            conn.setConnectTimeout(6000);
+            conn.setConnectTimeout(5000);
             conn.setDoInput(true);
             conn.setUseCaches(false);
 
@@ -111,15 +111,17 @@ public class LoadActivity extends Activity {
                 return;
             }
             
+            Intent intent;
             if (null == mAdvertisementBitmap) {
-                showAlert(R.string.alert_advertisement_download_failed);
+//                showAlert(R.string.alert_advertisement_download_failed);
+                intent = new Intent(LoadActivity.this, NavigationActivity.class); 
             } else {
                 BabyMallApplication.saveBitmapToFile(
                         BabyMallApplication.ADVERTISEMENT_IMAGE, mAdvertisementBitmap);
-                Intent intent = new Intent(LoadActivity.this, AdvertisementActivity.class);  
-                LoadActivity.this.startActivity(intent);  
-                LoadActivity.this.finish();  
+                intent = new Intent(LoadActivity.this, AdvertisementActivity.class); 
             }
+            LoadActivity.this.startActivity(intent);  
+            LoadActivity.this.finish();
         }
     }
 
