@@ -17,7 +17,8 @@
     <string name="member_url_path">"/member.html"</string>
     <string name="cart_url_path">"/cart.html"</string>
     <string name="more_url_path">"/inapp/more.html"</string>
-    <string name="add_receiver_url_path">"/member-receiver"</string>
+    <string name="add_receiver_url_path1">"/member-receiver.html"</string>
+    <string name="add_receiver_url_path2">"/member-receiver-1.html"</string>
     <string name="checkout_url_path">"/cart-checkout.html"</string>
     <string name="pay_url_path">"/member-orderdetail-"</string>
     

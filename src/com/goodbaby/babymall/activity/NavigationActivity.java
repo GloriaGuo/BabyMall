@@ -221,7 +221,8 @@ public class NavigationActivity extends Activity
                         disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_4);
                     }
-                    else if (path.contains(getString(R.string.add_receiver_url_path))) {
+                    else if (path.contains(getString(R.string.add_receiver_url_path1))
+                            || path.contains(getString(R.string.add_receiver_url_path2))) {
                         updateTitleButtonAddReceiver();
                     }
                     else if (path.contains(getString(R.string.checkout_url_path))) {
