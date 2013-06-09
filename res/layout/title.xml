@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:paddingLeft="10dp"
+        android:paddingLeft="8dp"
         android:layout_marginLeft="10dp"
         android:textSize="15dp"
         android:text="@string/back_button_text"
@@ -36,8 +36,21 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:textSize="15dp"
+        android:padding="5dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/navbarbtn"
+        android:visibility="gone" 
+        />
+    
+    <ImageButton
+        android:id="@+id/imageButtonRight2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/navbarbtn"
+        android:src="@drawable/barbuttonadd"
         android:visibility="gone" 
         />
 

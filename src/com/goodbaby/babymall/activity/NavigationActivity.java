@@ -2,6 +2,8 @@ package com.goodbaby.babymall.activity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.CookieManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -43,7 +46,9 @@ public class NavigationActivity extends Activity
     private Button mTabButton2;
     private Button mTabButton3;
     private Button mTabButton4;
+    private Button mTitleButtonLeft;
     private Button mTitleButtonRight;
+    private ImageButton mTitleButtonRight2;
     
     private static final int UPDATE_WHAT_TITLE = 0;
     private static final int UPDATE_WHAT_UI_PAGE_START = 1;
@@ -53,6 +58,7 @@ public class NavigationActivity extends Activity
     private static final String UPDATE_KEY_URL = "url";
     
     private int mCartNumber = 0;
+    private Boolean mCanPay = true;
     
     private SensorManager mSensorManager;
     private ShakeEventListener mSensorListener;
@@ -68,7 +74,9 @@ public class NavigationActivity extends Activity
         initTab();
         mProgressBar = (ProgressBar) findViewById(R.id.wv_progress);
 
+        mTitleButtonLeft = (Button) findViewById(R.id.imageButtonLeft);
         mTitleButtonRight = (Button) findViewById(R.id.imageButtonRight);
+        mTitleButtonRight2 = (ImageButton) findViewById(R.id.imageButtonRight2);
         mCustomWebView = new CustomWebView();
         mCustomWebView.init(this, R.id.wv);
         
@@ -177,21 +185,19 @@ public class NavigationActivity extends Activity
             }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_FINISH) {
                 String url = msg.getData().getString(UPDATE_KEY_URL);
+                Log.d(TAG, "Page Finished, url == " + url);
                 try {
                     String path = new URL(url).getPath();
-                    // update left Button
-                    Button leftButton = (Button) findViewById(R.id.imageButtonLeft);
+                    mTitleButtonLeft.setVisibility(View.GONE);
+                    mTitleButtonRight.setVisibility(View.GONE);
+                    mTitleButtonRight2.setVisibility(View.GONE);
+                    
                     if (mCustomWebView.getWebView().canGoBack()) {
-                        if (path.equalsIgnoreCase(getString(R.string.home_url_path))) {
-                            leftButton.setVisibility(View.GONE);
-                        } else {
-                            leftButton.setVisibility(View.VISIBLE);
+                        if (NavigationActivity.this.canGoBack(url)) {
+                            mTitleButtonLeft.setVisibility(View.VISIBLE);
                         }
-                    } else {
-                        leftButton.setVisibility(View.GONE);
                     }
-                   
-                    leftButton.setOnClickListener(new OnClickListener() {
+                    mTitleButtonLeft.setOnClickListener(new OnClickListener() {
 
                         @Override
                         public void onClick(View v) {
@@ -221,15 +227,17 @@ public class NavigationActivity extends Activity
                         disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_4);
                     }
-                    else if (path.contains(getString(R.string.add_receiver_url_path1))
-                            || path.contains(getString(R.string.add_receiver_url_path2))) {
+                    else if (path.equalsIgnoreCase(getString(R.string.add_receiver_url_path1))
+                            || path.equalsIgnoreCase(getString(R.string.add_receiver_url_path2))) {
                         updateTitleButtonAddReceiver();
                     }
-                    else if (path.contains(getString(R.string.checkout_url_path))) {
+                    else if (path.equalsIgnoreCase(getString(R.string.checkout_url_path))) {
                         updateTitleButtonSubmit();
                     }
                     else if (path.contains(getString(R.string.pay_url_path))) {
-                        updateTitleButtonPay();
+                        if (mCanPay) {
+                            updateTitleButtonPay();
+                        }
                     }
                 } catch (MalformedURLException e) {
                     Log.e(TAG, "Invalie url : " + e.getMessage());
@@ -278,9 +286,8 @@ public class NavigationActivity extends Activity
     }
     
     public void updateTitleButtonAddReceiver() {
-        mTitleButtonRight.setText(R.string.nav_button_right_add_receiver);
-        mTitleButtonRight.setVisibility(View.VISIBLE);
-        mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
+        mTitleButtonRight2.setVisibility(View.VISIBLE);
+        mTitleButtonRight2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCustomWebView.handleButtonAddReceiber();
@@ -351,7 +358,10 @@ public class NavigationActivity extends Activity
         } catch (MalformedURLException e) {
             return true;
         }
-        if (path.equalsIgnoreCase(getString(R.string.home_url_path))) {
+        Pattern pattern = Pattern.compile(getString(R.string.order_done_path) + "[0-9]{14}\\.html");
+        Matcher matcher = pattern.matcher(path);
+        if (path.equalsIgnoreCase(getString(R.string.home_url_path)) ||
+            matcher.matches()) {
             return false;
         }
         return true;
@@ -375,6 +385,11 @@ public class NavigationActivity extends Activity
             }
         }
         return cart_number;
+    }
+
+    @Override
+    public void onCanPaySet(String length) {
+        mCanPay = length.equals("0") ? false : true;
     }
 
 }

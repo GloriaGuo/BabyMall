@@ -50,6 +50,7 @@ public class CustomWebView {
         public void onPhotoBrowserStart(String urls, String clickedUrl);
         public void onWebPageStart();
         public void onWebPageFinished(String url);
+        public void onCanPaySet(String length);
     }
     
     public void init(Context context, int webViewId) {
@@ -106,6 +107,11 @@ public class CustomWebView {
              */
             @Override
             public void onPageFinished(WebView view, String url) {
+                if (url.contains(mContext.getString(R.string.pay_url_path))) {
+                    view.loadUrl(
+                            "javascript:window.APP_TITLE.setCanPay(" +
+                            "document.getElementsByClassName('order-detail-gotopay').length)");
+                }
                 view.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
                 ((UIUpdateInterface) mContext).onWebPageFinished(url);
                 super.onPageFinished(view, url);
@@ -257,7 +263,11 @@ public class CustomWebView {
         public void getGalleryList(final String gallery) {
             ((UIUpdateInterface)mContext).onPhotoBrowserStart(gallery, mClickedUrl);
         }
-       
+        
+        @JavascriptInterface
+        public void setCanPay(String length) {
+            ((UIUpdateInterface)mContext).onCanPaySet(length);
+        }
     }
     
     public void handleButtonSubmit() {
