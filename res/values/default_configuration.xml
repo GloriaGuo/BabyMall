@@ -20,8 +20,8 @@
     <string name="add_receiver_url_path1">"/member-add_receiver.html"</string>
     <string name="add_receiver_url_path2">"/member-add_receiver-1.html"</string>
     <string name="checkout_url_path">"/cart-checkout.html"</string>
-    <string name="pay_url_path">"/member-orderdetail-"</string>
+    <string name="orderdetail_url_path">"/member-orderdetail-"</string>
     <string name="order_done_path">"/order-"</string>
-    
+    <string name="pay_url_path">"/order-goToPay.html?order_id="</string>
     
 </resources>

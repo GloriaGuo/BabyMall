@@ -17,16 +17,10 @@ public class BabyMallApplication extends Application {
     protected static String mApplicationTag = "BabyMall";
     
     public static final String EXTERNAL_STORAGE_PATH = 
-            Environment.getExternalStorageDirectory() + "/" + ".babymall";
+            Environment.getExternalStorageDirectory() + "/.babymall/";
     
     public static final String ADVERTISEMENT_IMAGE = "advertisement.png";
     
-    public static final String TAB_HOME_URL_PATH = "/";
-    public static final String TAB_CATEGORY_URL_PATH = "/category.html";
-    public static final String TAB_MEMBER_URL_PATH = "/member.html";
-    public static final String TAB_CART_URL_PATH = "/cart.html";
-    public static final String TAB_MORE_URL_PATH = "/inapp/more.html";
-   
     public static final String CART_NUMBER = "S[CART_NUMBER]";
 
     
@@ -83,19 +77,30 @@ public class BabyMallApplication extends Application {
     
     public static void saveBitmapToFile(String name, Bitmap bitmap) {      
         File f = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH + name);
-        FileOutputStream fOut = null;
         try {
             if (f.exists()) {
-                Log.d(mApplicationTag, "Remove the previous file.");
+                Log.d(mApplicationTag, "Already existed. Removed!");
                 f.delete();
             }
             f.createNewFile();
-            fOut = new FileOutputStream(f);
+            FileOutputStream fOut = new FileOutputStream(f);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
             fOut.flush();
             fOut.close();
         } catch (Exception e) {
-            Log.e(mApplicationTag, "Create the advertisement file failed: " + e.getMessage());
+            Log.e(mApplicationTag, "Save the image file failed: " + e.getMessage());
+        }
+    }
+    
+    public static void revomeFile(String name) {
+        File f = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH + name);
+        try {
+            if (f.exists()) {
+                Log.d(mApplicationTag, "Remove the previous file " + name);
+                f.delete();
+            }
+        } catch (Exception e) {
+            Log.e(mApplicationTag, "Remove the image file failed: " + e.getMessage());
         }
     }
 

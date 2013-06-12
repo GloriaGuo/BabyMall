@@ -58,7 +58,7 @@ public class NavigationActivity extends Activity
     private static final String UPDATE_KEY_URL = "url";
     
     private int mCartNumber = 0;
-    private Boolean mCanPay = true;
+    private Boolean mCanPay = false;
     
     private SensorManager mSensorManager;
     private ShakeEventListener mSensorListener;
@@ -76,7 +76,19 @@ public class NavigationActivity extends Activity
 
         mTitleButtonLeft = (Button) findViewById(R.id.imageButtonLeft);
         mTitleButtonRight = (Button) findViewById(R.id.imageButtonRight);
+        mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomWebView.handleRightButton();
+            }
+        });
         mTitleButtonRight2 = (ImageButton) findViewById(R.id.imageButtonRight2);
+        mTitleButtonRight2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomWebView.handleRightButton();
+            }
+        });
         mCustomWebView = new CustomWebView();
         mCustomWebView.init(this, R.id.wv);
         
@@ -208,15 +220,12 @@ public class NavigationActivity extends Activity
                     
                     // update tab
                     if (path.equalsIgnoreCase(getString(R.string.category_url_path))) {
-                        disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_0);
                     }
                     else if (path.equalsIgnoreCase(getString(R.string.member_url_path))) {
-                        disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_1);
                     }
                     else if (path.equalsIgnoreCase(getString(R.string.home_url_path))) {
-                        disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_2);
                     }
                     else if (path.equalsIgnoreCase(getString(R.string.cart_url_path))) {
@@ -224,7 +233,6 @@ public class NavigationActivity extends Activity
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_3);
                     }
                     else if (path.equalsIgnoreCase(getString(R.string.more_url_path))) {
-                        disableTitleButtonRight();
                         mTabsLayout.setBackgroundResource(R.drawable.tabbar_4);
                     }
                     else if (path.equalsIgnoreCase(getString(R.string.add_receiver_url_path1))
@@ -234,7 +242,7 @@ public class NavigationActivity extends Activity
                     else if (path.equalsIgnoreCase(getString(R.string.checkout_url_path))) {
                         updateTitleButtonSubmit();
                     }
-                    else if (path.contains(getString(R.string.pay_url_path))) {
+                    else if (path.contains(getString(R.string.orderdetail_url_path))) {
                         if (mCanPay) {
                             updateTitleButtonPay();
                         }
@@ -268,53 +276,25 @@ public class NavigationActivity extends Activity
         }
     }
     
-    public void disableTitleButtonRight() {
-        mTitleButtonRight.setVisibility(View.GONE);
-    }
-    
     public void updateTitleButtonCheckout() {
         if (mCartNumber > 0) {
             mTitleButtonRight.setText(R.string.nav_button_right_checkout);
             mTitleButtonRight.setVisibility(View.VISIBLE);
-            mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCustomWebView.handleButtonCheckout();
-                }
-            });
         }
     }
     
     public void updateTitleButtonAddReceiver() {
         mTitleButtonRight2.setVisibility(View.VISIBLE);
-        mTitleButtonRight2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCustomWebView.handleButtonAddReceiber();
-            }
-        });
     }
     
     public void updateTitleButtonSubmit() {
         mTitleButtonRight.setText(R.string.nav_button_right_submit);
         mTitleButtonRight.setVisibility(View.VISIBLE);
-        mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCustomWebView.handleButtonSubmit();
-            }
-        });
     }
     
     public void updateTitleButtonPay() {
         mTitleButtonRight.setText(R.string.nav_button_right_pay);
         mTitleButtonRight.setVisibility(View.VISIBLE);
-        mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCustomWebView.handleButtonPay();
-            }
-        });
     }
 
     @Override

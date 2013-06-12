@@ -39,6 +39,10 @@
             android:name=".activity.GalleryActivity" 
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.Photo" 
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

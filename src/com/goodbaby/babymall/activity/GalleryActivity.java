@@ -13,6 +13,7 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -31,6 +32,7 @@ import android.widget.Gallery;
 import android.widget.Gallery.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.goodbaby.babymall.BabyMallApplication;
 import com.goodbaby.babymall.R;
@@ -45,6 +47,9 @@ public class GalleryActivity extends Activity
     
     private static HashMap<String, Bitmap> imagesCache = new HashMap<String, Bitmap>(); 
     
+    private int mCount = 0;
+    private int mCurrentPosition = 0;
+    private TextView mTitleText;
     private ProgressBar mProgressBar;
     private MyGallery mMainGallery;
     private ImageAdapter mImageAdapter;
@@ -68,6 +73,10 @@ public class GalleryActivity extends Activity
                 }
             }
             imagesCache.clear();
+        }
+        
+        for (int i=0; i<mCount; i++) {
+            BabyMallApplication.revomeFile(String.valueOf(i) + ".png");
         }
         super.onDestroy();
     }
@@ -94,13 +103,15 @@ public class GalleryActivity extends Activity
             Log.e(TAG, "JSONException e: " + e.getMessage());
         }
         
+        mCount = urlsList.size();
+        mTitleText = (TextView) findViewById(R.id.gallery_title);
         mProgressBar = (ProgressBar) findViewById(R.id.gallery_progress);
         mMainGallery = (MyGallery) findViewById(R.id.gallery);
         mImageAdapter = new ImageAdapter(urlsList, this);
         mMainGallery.setAdapter(mImageAdapter);
         mMainGallery.setOnItemSelectedListener(this);
         mMainGallery.setSelection(position);
-
+        
         mHandler = new MyHandler();
     }
     
@@ -146,6 +157,9 @@ public class GalleryActivity extends Activity
         {
             public boolean onDoubleTap(MotionEvent e)
             {
+                Intent intent = new Intent((GalleryActivity)mContext, Photo.class);
+                intent.putExtra("position", ((GalleryActivity)mContext).getCurrentPosition());
+                ((GalleryActivity)mContext).startActivity(intent);
                 return true;
             }
         }
@@ -174,16 +188,14 @@ public class GalleryActivity extends Activity
         }  
       
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {  
-            Bitmap image = null;  
-            
+        public View getView(final int position, View convertView, ViewGroup parent) {              
             ImageView imageView = new ImageView(context);
-            image = imagesCache.get(imageUrls.get(position));
+            final Bitmap image = imagesCache.get(imageUrls.get(position));
             if (image != null) {
                 imageView.setImageBitmap(image); 
             } else {
                 LoadImageTask task = new LoadImageTask();  
-                task.execute(imageUrls.get(position));
+                task.execute(imageUrls.get(position), String.valueOf(position));
             }
             
             imageView.setDrawingCacheEnabled(true);
@@ -193,6 +205,7 @@ public class GalleryActivity extends Activity
             
             return imageView;  
         }  
+        
     }
     
     private class MyHandler extends Handler {
@@ -227,6 +240,7 @@ public class GalleryActivity extends Activity
                 options.inSampleSize = 2;
                 bitmap = BitmapFactory.decodeStream(is, null, options); 
                 imagesCache.put(params[0], bitmap);
+                BabyMallApplication.saveBitmapToFile(params[1] + ".png", bitmap);
                 is.close();  
             } catch (Exception e) {  
                 Log.e(TAG, "Download image failed : " + e.getMessage());  
@@ -248,38 +262,17 @@ public class GalleryActivity extends Activity
     @Override
     public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
             long arg3) {
-        Log.d(TAG, "---> onItemSelected index === " + arg2);
-//        galleryWhetherStop(arg2);
+        mCurrentPosition = arg2;
+        mTitleText.setText(String.valueOf(arg2+1) + "/" + mCount);
     } 
-
-//    private void galleryWhetherStop(final int index) {
-//        new Thread(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                try {
-//                    //Thread.sleep(1000);
-//                    if (index == 0) {
-//                        mImageUrlsList.add(mAllUrlsList.get(index));
-//                    }
-//                    if (index!=0 && mAllUrlsList.get(index-1)  != null) {
-//                        mImageUrlsList.add(mAllUrlsList.get(index-1));
-//                    }
-//                    if (index != mAllUrlsList.size()-1 && mAllUrlsList.get(index+1) != null) {
-//                        mImageUrlsList.add(mAllUrlsList.get(index+1));
-//                    }
-//                    mHandler.sendEmptyMessage(DOWNLOAD_IMAGES);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }                
-//            }
-//            
-//        }).start();
-//    }
     
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {
         Log.d(TAG, "---> onNothingSelected do nothing."); 
-    }  
+    } 
+    
+    public int getCurrentPosition() {
+        return mCurrentPosition;
+    }
 
 }

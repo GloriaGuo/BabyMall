@@ -38,9 +38,12 @@ public class AdvertisementActivity extends Activity {
             new Handler().postDelayed(new Runnable(){  
                 @Override  
                 public void run() {
-                    bitmap.recycle();
                     Intent mainIntent = new Intent(AdvertisementActivity.this, NavigationActivity.class);  
-                    AdvertisementActivity.this.startActivity(mainIntent);  
+                    AdvertisementActivity.this.startActivity(mainIntent);
+                    if (null != bitmap) {
+                        bitmap.recycle();
+                    }
+                    BabyMallApplication.revomeFile(BabyMallApplication.ADVERTISEMENT_IMAGE);
                     AdvertisementActivity.this.finish();  
                 }  
             }, 2000);

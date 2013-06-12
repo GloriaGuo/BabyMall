@@ -107,7 +107,7 @@ public class CustomWebView {
              */
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (url.contains(mContext.getString(R.string.pay_url_path))) {
+                if (url.contains(mContext.getString(R.string.orderdetail_url_path))) {
                     view.loadUrl(
                             "javascript:window.APP_TITLE.setCanPay(" +
                             "document.getElementsByClassName('order-detail-gotopay').length)");
@@ -268,21 +268,11 @@ public class CustomWebView {
         public void setCanPay(String length) {
             ((UIUpdateInterface)mContext).onCanPaySet(length);
         }
+
     }
     
-    public void handleButtonSubmit() {
-        mWebView.loadUrl(mContext.getString(R.string.submit_url));
+    public void handleRightButton() {
+        mWebView.loadUrl("javascript:window.barButtonAction()");
     }
     
-    public void handleButtonPay() {
-        
-    }
-    
-    public void handleButtonCheckout() {
-        mWebView.loadUrl(mContext.getString(R.string.checkout_url));
-    }
-    
-    public void handleButtonAddReceiber() {
-        mWebView.loadUrl(mContext.getString(R.string.add_receiver_url));
-    }
 }
