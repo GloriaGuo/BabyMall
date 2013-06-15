@@ -200,6 +200,7 @@ public class NavigationActivity extends Activity
                 Log.d(TAG, "Page Finished, url == " + url);
                 try {
                     String path = new URL(url).getPath();
+                    mCartNumber = getCartNumber(url);
                     mTitleButtonLeft.setVisibility(View.GONE);
                     mTitleButtonRight.setVisibility(View.GONE);
                     mTitleButtonRight2.setVisibility(View.GONE);
@@ -252,7 +253,6 @@ public class NavigationActivity extends Activity
                 }
                 
                 // update cart number
-                mCartNumber = getCartNumber(url);
                 if (mCartNumber > 0) {
                     String cartText = mCartNumber >= 10 ? "N" : String.valueOf(mCartNumber);
                     mBadge.setText(cartText);
