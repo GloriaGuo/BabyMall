@@ -7,15 +7,15 @@
       
     <Button
         android:id="@+id/imageButtonLeft"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:paddingLeft="8dp"
+        android:paddingLeft="5dp"
         android:layout_marginLeft="10dp"
         android:textSize="15dp"
         android:text="@string/back_button_text"
-        android:background="@drawable/navbarbackbtn"
+        android:background="@drawable/navbarbackbtn_selector"
         android:visibility="gone"
         />  
 
@@ -37,9 +37,10 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:textSize="15dp"
-        android:padding="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/navbarbtn"
+        android:background="@drawable/navbarbtn_selector"
         android:visibility="gone" 
         />
     
@@ -50,7 +51,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:background="@drawable/navbarbtn"
+        android:background="@drawable/navbarbtn_selector"
         android:src="@drawable/barbuttonadd"
         android:visibility="gone" 
         />

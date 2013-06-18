@@ -5,16 +5,13 @@
     android:layout_height="fill_parent"> 
   
     <view xmlns:android="http://schemas.android.com/apk/res/android"
-    		class="com.goodbaby.babymall.activity.GalleryActivity$MyGallery"
-   			android:id="@+id/gallery"
+        class="com.goodbaby.babymall.activity.PhotoViewActivity$MyViewPager"
+        android:id="@+id/image_viewpager"
         android:background="#ffffff"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:spacing="16dp"/>
+        android:layout_height="fill_parent" />
     
-    <TextView android:id="@+id/gallery_title"
+    <TextView android:id="@+id/image_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -25,7 +22,7 @@
         />
     
     <ProgressBar
-        android:id="@+id/gallery_progress"
+        android:id="@+id/image_progress"
         android:layout_width="wrap_content"
         style="?android:attr/progressBarStyle"
         android:layout_height="wrap_content"

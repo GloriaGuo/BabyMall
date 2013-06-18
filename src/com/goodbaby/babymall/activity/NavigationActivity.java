@@ -74,7 +74,17 @@ public class NavigationActivity extends Activity
         initTab();
         mProgressBar = (ProgressBar) findViewById(R.id.wv_progress);
 
+        mCustomWebView = new CustomWebView();
+        mCustomWebView.init(this, R.id.wv);
+        
         mTitleButtonLeft = (Button) findViewById(R.id.imageButtonLeft);
+        mTitleButtonLeft.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomWebView.getWebView().goBack();
+            }
+        });
+        
         mTitleButtonRight = (Button) findViewById(R.id.imageButtonRight);
         mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,8 +99,6 @@ public class NavigationActivity extends Activity
                 mCustomWebView.handleRightButton();
             }
         });
-        mCustomWebView = new CustomWebView();
-        mCustomWebView.init(this, R.id.wv);
         
         myHandler = new MyHandler();
         
@@ -210,14 +218,6 @@ public class NavigationActivity extends Activity
                             mTitleButtonLeft.setVisibility(View.VISIBLE);
                         }
                     }
-                    mTitleButtonLeft.setOnClickListener(new OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            mCustomWebView.getWebView().goBack();
-                        }
-                        
-                    });
                     
                     // update tab
                     if (path.equalsIgnoreCase(getString(R.string.category_url_path))) {
@@ -299,7 +299,7 @@ public class NavigationActivity extends Activity
 
     @Override
     public void onPhotoBrowserStart(String urls, String clickedUrl) {
-        Intent intent = new Intent(NavigationActivity.this, GalleryActivity.class);
+        Intent intent = new Intent(NavigationActivity.this, PhotoViewActivity.class);
         intent.putExtra("urls", urls + "\n" + clickedUrl);
         startActivity(intent);
     }

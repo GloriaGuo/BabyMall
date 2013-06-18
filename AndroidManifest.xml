@@ -36,11 +36,7 @@
             android:name=".activity.NavigationActivity" 
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.GalleryActivity" 
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.Photo" 
+            android:name=".activity.PhotoViewActivity" 
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
             android:screenOrientation="portrait" />
     </application>
