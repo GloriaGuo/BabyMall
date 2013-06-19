@@ -106,7 +106,7 @@ public class PhotoViewActivity extends Activity {
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setCurrentItem(position);
         mCurrentPosition = position;
-        mTextView.setText((position+1) + "/" + mUrlsList.size());
+        mTextView.setText((position+1) + " / " + mUrlsList.size());
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -200,10 +200,10 @@ public class PhotoViewActivity extends Activity {
                 }
             } else if (msg.what == SHOW_PROGRESS) {
                 mProgressBar.setVisibility(View.VISIBLE);
-                mTextView.setText((mCurrentPosition+1) + "/" + mUrlsList.size());
+                mTextView.setText((mCurrentPosition+1) + " / " + mUrlsList.size());
             } else if (msg.what == ERASE_PROGRESS) {
                 mProgressBar.setVisibility(View.GONE);
-                mTextView.setText((mCurrentPosition+1) + "/" + mUrlsList.size());
+                mTextView.setText((mCurrentPosition+1) + " / " + mUrlsList.size());
             }
         }
     }

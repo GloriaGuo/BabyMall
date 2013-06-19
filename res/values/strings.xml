@@ -9,5 +9,6 @@
     <string name="nav_button_right_submit">提交订单</string>
     <string name="nav_button_right_pay">付款</string>
     <string name="nav_button_right_checkout">结算</string>
+    <string name="nav_button_right_add">添加</string>
     
 </resources>

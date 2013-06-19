@@ -21,7 +21,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.CookieManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -48,7 +47,6 @@ public class NavigationActivity extends Activity
     private Button mTabButton4;
     private Button mTitleButtonLeft;
     private Button mTitleButtonRight;
-    private ImageButton mTitleButtonRight2;
     
     private static final int UPDATE_WHAT_TITLE = 0;
     private static final int UPDATE_WHAT_UI_PAGE_START = 1;
@@ -87,13 +85,6 @@ public class NavigationActivity extends Activity
         
         mTitleButtonRight = (Button) findViewById(R.id.imageButtonRight);
         mTitleButtonRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCustomWebView.handleRightButton();
-            }
-        });
-        mTitleButtonRight2 = (ImageButton) findViewById(R.id.imageButtonRight2);
-        mTitleButtonRight2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCustomWebView.handleRightButton();
@@ -211,7 +202,6 @@ public class NavigationActivity extends Activity
                     mCartNumber = getCartNumber(url);
                     mTitleButtonLeft.setVisibility(View.GONE);
                     mTitleButtonRight.setVisibility(View.GONE);
-                    mTitleButtonRight2.setVisibility(View.GONE);
                     
                     if (mCustomWebView.getWebView().canGoBack()) {
                         if (NavigationActivity.this.canGoBack(url)) {
@@ -284,7 +274,8 @@ public class NavigationActivity extends Activity
     }
     
     public void updateTitleButtonAddReceiver() {
-        mTitleButtonRight2.setVisibility(View.VISIBLE);
+        mTitleButtonRight.setText(R.string.nav_button_right_add);
+        mTitleButtonRight.setVisibility(View.VISIBLE);
     }
     
     public void updateTitleButtonSubmit() {
