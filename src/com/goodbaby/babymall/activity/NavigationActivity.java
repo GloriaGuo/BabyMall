@@ -16,6 +16,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -76,6 +77,14 @@ public class NavigationActivity extends Activity
 
         mCustomWebView = new CustomWebView();
         mCustomWebView.init(this, R.id.wv);
+        mCustomWebView.getWebView().setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				updateCartNumber();
+				return false;
+			}
+		});
         
         mTitleButtonLeft = (Button) findViewById(R.id.imageButtonLeft);
         mTitleButtonLeft.setOnClickListener(new OnClickListener() {
@@ -202,7 +211,6 @@ public class NavigationActivity extends Activity
                 Log.d(TAG, "Page Finished, url == " + url);
                 try {
                     String path = new URL(url).getPath();
-                    mCartNumber = getCartNumber(url);
                     mTitleButtonLeft.setVisibility(View.GONE);
                     mTitleButtonRight.setVisibility(View.GONE);
                     if (mCustomWebView.getWebView().canGoBack()) {
@@ -244,21 +252,7 @@ public class NavigationActivity extends Activity
                     Log.e(TAG, "Invalie url : " + e.getMessage());
                 }
                 
-                // update cart number
-                if (mCartNumber > 0) {
-                    String cartText = mCartNumber >= 10 ? "N" : String.valueOf(mCartNumber);
-                    mBadge.setText(cartText);
-                    mBadge.setBackgroundResource(R.drawable.badge);
-                    mBadge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-                    mBadge.setBadgeMargin(25, 23);
-                    mBadge.setGravity(Gravity.CENTER);
-                    mBadge.show();
-                }
-                else {
-                    mBadge.hide();
-                }
-                
-                // disable progress bar
+                updateCartNumber(url);
                 mProgressBar.setVisibility(View.GONE);
             }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_START) {
@@ -324,8 +318,8 @@ public class NavigationActivity extends Activity
         }
         return super.onKeyDown(keyCode, event);
     }
-    
-    private Boolean canGoBack(String url) {
+
+	private Boolean canGoBack(String url) {
         String path = null;
         try {
             path = new URL(url).getPath();
@@ -369,4 +363,24 @@ public class NavigationActivity extends Activity
         mCanPay = length.equals("0") ? false : true;
     }
 
+	private void updateCartNumber(String url) {
+		mCartNumber = getCartNumber(url);
+		if (mCartNumber > 0) {
+		    String cartText = mCartNumber >= 10 ? "N" : String.valueOf(mCartNumber);
+		    mBadge.setText(cartText);
+		    mBadge.setBackgroundResource(R.drawable.badge);
+		    mBadge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+		    mBadge.setBadgeMargin(25, 23);
+		    mBadge.setGravity(Gravity.CENTER);
+		    mBadge.show();
+		}
+		else {
+		    mBadge.hide();
+		}
+	}
+	
+	private void updateCartNumber() {
+		updateCartNumber(this.mCustomWebView.getWebView().getUrl());
+	}
+    
 }
