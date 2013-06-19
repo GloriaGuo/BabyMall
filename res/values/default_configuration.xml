@@ -2,6 +2,13 @@
 
 <resources>
     
+<!--     <string name="advertisement">http://www.beta.haohaizi.com/synapi/mobile_splash</string> -->
+<!--     <string name="tab_home_url">http://www.beta.haohaizi.com/?inapp</string> -->
+<!--     <string name="tab_category_url">http://www.beta.haohaizi.com/category.html?inapp</string> -->
+<!--     <string name="tab_member_url">http://www.beta.haohaizi.com/member.html?inapp</string> -->
+<!--     <string name="tab_cart_url">http://www.beta.haohaizi.com/cart.html?inapp</string> -->
+<!--     <string name="tab_more_url">http://www.beta.haohaizi.com/inapp/more.html?inapp</string> -->
+    
     <string name="advertisement">http://m.haohaizi.com/synapi/mobile_splash</string>
     <string name="tab_home_url">http://m.haohaizi.com/?inapp</string>
     <string name="tab_category_url">http://m.haohaizi.com/category.html?inapp</string>
@@ -19,6 +26,6 @@
     <string name="checkout_url_path">"/cart-checkout.html"</string>
     <string name="orderdetail_url_path">"/member-orderdetail-"</string>
     <string name="order_done_path">"/order-"</string>
-    <string name="pay_url_path">"/order-goToPay.html?order_id="</string>
+    <string name="payment_path">"/site/paycenter-dopayment-order.html"</string>
     
 </resources>

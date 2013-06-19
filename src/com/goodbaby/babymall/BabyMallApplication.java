@@ -22,7 +22,6 @@ public class BabyMallApplication extends Application {
     public static final String ADVERTISEMENT_IMAGE = "advertisement.png";
     
     public static final String CART_NUMBER = "S[CART_NUMBER]";
-
     
     /**
      * The application context

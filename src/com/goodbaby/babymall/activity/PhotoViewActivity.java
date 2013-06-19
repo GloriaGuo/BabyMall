@@ -229,7 +229,7 @@ public class PhotoViewActivity extends Activity {
                 InputStream is = conn.getInputStream(); 
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = false;
-                options.inSampleSize = 10;
+                options.inSampleSize = 4;
                 bitmap = BitmapFactory.decodeStream(is, null, options); 
                 imagesCache.remove(params[0]);
                 imagesCache.put(params[0], bitmap);

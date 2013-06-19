@@ -61,6 +61,8 @@ public class NavigationActivity extends Activity
     private SensorManager mSensorManager;
     private ShakeEventListener mSensorListener;
     
+    private int mGoBackSteps = -1;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +81,8 @@ public class NavigationActivity extends Activity
         mTitleButtonLeft.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCustomWebView.getWebView().goBack();
+                mCustomWebView.getWebView().goBackOrForward(mGoBackSteps);
+                mGoBackSteps = -1;
             }
         });
         
@@ -202,7 +205,6 @@ public class NavigationActivity extends Activity
                     mCartNumber = getCartNumber(url);
                     mTitleButtonLeft.setVisibility(View.GONE);
                     mTitleButtonRight.setVisibility(View.GONE);
-                    
                     if (mCustomWebView.getWebView().canGoBack()) {
                         if (NavigationActivity.this.canGoBack(url)) {
                             mTitleButtonLeft.setVisibility(View.VISIBLE);
@@ -315,7 +317,8 @@ public class NavigationActivity extends Activity
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && mCustomWebView.getWebView().canGoBack()) {
             if (canGoBack(mCustomWebView.getWebView().getUrl())) {
-                mCustomWebView.getWebView().goBack();
+                mCustomWebView.getWebView().goBackOrForward(mGoBackSteps);
+                mGoBackSteps = -1;
                 return true;
             }
         }
@@ -328,6 +331,9 @@ public class NavigationActivity extends Activity
             path = new URL(url).getPath();
         } catch (MalformedURLException e) {
             return true;
+        }
+        if (path.equals(getResources().getString(R.string.payment_path))) {
+            mGoBackSteps = -2;
         }
         Pattern pattern = Pattern.compile(getString(R.string.order_done_path) + "[0-9]{14}\\.html");
         Matcher matcher = pattern.matcher(path);

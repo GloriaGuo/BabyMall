@@ -82,7 +82,6 @@ public class CustomWebView {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(TAG, "---> shouldOverrideUrlLoading url == " + url);
-
                 if (MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("jpg") ||
                     MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("png")) {
                     mClickedUrl = url;
