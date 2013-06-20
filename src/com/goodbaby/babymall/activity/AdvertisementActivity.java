@@ -52,8 +52,7 @@ public class AdvertisementActivity extends Activity {
         } catch (IOException e) {
             Log.e(TAG, "Read the advertisement file failed: " + e.getMessage());
         }
-        
-        
+
     }
 
 }

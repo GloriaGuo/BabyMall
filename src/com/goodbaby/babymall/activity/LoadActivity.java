@@ -5,9 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,22 +32,26 @@ public class LoadActivity extends Activity {
         setContentView(R.layout.load);  
         
         myHandler = new MyHandler();
-        
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                // Download the advertisement icon
-                mAdvertisementBitmap = getHttpBitmap(getResources().getString(R.string.advertisement));
-                LoadActivity.this.myHandler.sendEmptyMessage(0);
-            }
-        }).start();
     }
     
     @Override
     protected void onResume() {
-        super.onPause();
+        super.onResume();
         isAlive = true;
+        if (null == mAdvertisementBitmap) {
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    // Download the advertisement icon
+                    mAdvertisementBitmap = getHttpBitmap(getResources().getString(R.string.advertisement));
+                    LoadActivity.this.myHandler.sendEmptyMessage(0);
+                }
+                
+            }).start();
+        } else {
+            myHandler.sendEmptyMessage(0);
+        }
     }
     
     @Override
@@ -91,19 +92,19 @@ public class LoadActivity extends Activity {
         return bitmap;
     }
     
-    private void showAlert(int message) {
-        AlertDialog mErrorDialog = new AlertDialog.Builder(this)
-            .setMessage(message)
-            .setCancelable(true)
-            .setOnCancelListener(new OnCancelListener() {
-                @Override
-                public void onCancel(final DialogInterface dialog) {
-                    finish();
-                }
-            }).show();
-            
-        mErrorDialog.setOwnerActivity(this);
-    }
+//    private void showAlert(int message) {
+//        AlertDialog mErrorDialog = new AlertDialog.Builder(this)
+//            .setMessage(message)
+//            .setCancelable(true)
+//            .setOnCancelListener(new OnCancelListener() {
+//                @Override
+//                public void onCancel(final DialogInterface dialog) {
+//                    finish();
+//                }
+//            }).show();
+//            
+//        mErrorDialog.setOwnerActivity(this);
+//    }
     
     private class MyHandler extends Handler {
         public MyHandler() {
@@ -130,5 +131,5 @@ public class LoadActivity extends Activity {
             LoadActivity.this.finish();
         }
     }
-
+    
 }

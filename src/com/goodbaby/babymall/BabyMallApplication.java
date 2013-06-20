@@ -27,10 +27,6 @@ public class BabyMallApplication extends Application {
      * The application context
      */
     protected static Context mContext = null;
-    /**
-     * Application configuration
-     */
-    private static BabyMallConfiguration mConfiguration = null;
     
     /**
      * @return the application tag (used in application logs)
@@ -38,15 +34,6 @@ public class BabyMallApplication extends Application {
     public static String getApplicationTag() {
         return mApplicationTag;
     }
-    
-    /**
-     * Gets the configuration
-     * @return the current configuration
-     */
-    public static BabyMallConfiguration getConfiguration() {
-        return mConfiguration;
-    }
-    
     
     public static Context getContext() {
         return mContext;
@@ -69,9 +56,6 @@ public class BabyMallApplication extends Application {
         
         File dir = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH);
         dir.mkdirs();
-        
-        // Configuration
-        mConfiguration = new BabyMallConfiguration(mContext);
     }
     
     public static void saveBitmapToFile(String name, Bitmap bitmap) {      
