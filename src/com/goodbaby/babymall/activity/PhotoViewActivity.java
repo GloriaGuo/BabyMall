@@ -28,8 +28,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -50,6 +52,8 @@ public class PhotoViewActivity extends Activity {
     private static int RELOAD_VIEW = 0;
     private static int SHOW_PROGRESS = 1;
     private static int ERASE_PROGRESS = 2;
+    
+    private Boolean isAlive = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,7 @@ public class PhotoViewActivity extends Activity {
     
     @Override
     protected void onDestroy() {
+        isAlive = false;
         if (imagesCache != null) {
             for (Entry<String, Bitmap> entry : imagesCache.entrySet()) {
                 Bitmap b = entry.getValue();
@@ -108,6 +113,7 @@ public class PhotoViewActivity extends Activity {
         mViewPager.setCurrentItem(position);
         mTextView.setText((position+1) + " / " + mUrlsList.size());
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            
             @Override
             public void onPageSelected(int position) {
                 mCurrentPosition = position;
@@ -118,8 +124,18 @@ public class PhotoViewActivity extends Activity {
                     mHandler.sendEmptyMessage(ERASE_PROGRESS);
                 }
             }
+            
         });
         
+        Button button = (Button)findViewById(R.id.image_closeButton);
+        button.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                PhotoViewActivity.this.finish();
+            }
+            
+        });
     }
     
     private void clearImagesCache(int position) {
@@ -212,6 +228,10 @@ public class PhotoViewActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            if (!isAlive) {
+                return;
+            }
+
             if (msg.what == RELOAD_VIEW) {
                 int tag = Integer.valueOf(msg.getData().getString("position")).intValue();
                 PhotoView view = (PhotoView)mViewPager.findViewWithTag(tag);
