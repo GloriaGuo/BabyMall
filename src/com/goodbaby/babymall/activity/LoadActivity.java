@@ -48,6 +48,12 @@ public class LoadActivity extends Activity {
     }
     
     @Override
+    protected void onResume() {
+        super.onPause();
+        isAlive = true;
+    }
+    
+    @Override
     protected void onPause() {
         isAlive = false;
         super.onPause();

@@ -64,6 +64,7 @@ public class CustomWebView {
         mWebView.getSettings().setUseWideViewPort(true);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebView.getSettings().setAppCacheEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);  
         
         mCustomJavaScriptInterface = new CustomJavaScriptInterface();
