@@ -2,12 +2,12 @@
 
 <resources>
     
-<!--     <string name="advertisement">http://www.beta.haohaizi.com/synapi/mobile_splash</string> -->
-<!--     <string name="tab_home_url">http://www.beta.haohaizi.com/?inapp</string> -->
-<!--     <string name="tab_category_url">http://www.beta.haohaizi.com/category.html?inapp</string> -->
-<!--     <string name="tab_member_url">http://www.beta.haohaizi.com/member.html?inapp</string> -->
-<!--     <string name="tab_cart_url">http://www.beta.haohaizi.com/cart.html?inapp</string> -->
-<!--     <string name="tab_more_url">http://www.beta.haohaizi.com/inapp/more.html?inapp</string> -->
+<!--     <string name="advertisement">http://m.beta.haohaizi.com/synapi/mobile_splash</string> -->
+<!--     <string name="tab_home_url">http://m.beta.haohaizi.com/?inapp</string> -->
+<!--     <string name="tab_category_url">http://m.beta.haohaizi.com/category.html?inapp</string> -->
+<!--     <string name="tab_member_url">http://m.beta.haohaizi.com/member.html?inapp</string> -->
+<!--     <string name="tab_cart_url">http://m.beta.haohaizi.com/cart.html?inapp</string> -->
+<!--     <string name="tab_more_url">http://m.beta.haohaizi.com/inapp/more.html?inapp</string> -->
     
     <string name="advertisement">http://m.haohaizi.com/synapi/mobile_splash</string>
     <string name="tab_home_url">http://m.haohaizi.com/?inapp</string>

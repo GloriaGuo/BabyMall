@@ -102,15 +102,16 @@ public class PhotoViewActivity extends Activity {
 
         mHandler = new MyHandler();
 
+        mCurrentPosition = position;
         mPagerAdapter = new MyPagerAdapter();
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setCurrentItem(position);
-        mCurrentPosition = position;
         mTextView.setText((position+1) + " / " + mUrlsList.size());
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 mCurrentPosition = position;
+                clearImagesCache(position);
                 if (null == imagesCache.get(mUrlsList.get(position))) {
                     mHandler.sendEmptyMessage(SHOW_PROGRESS);
                 } else {
@@ -119,6 +120,28 @@ public class PhotoViewActivity extends Activity {
             }
         });
         
+    }
+    
+    private void clearImagesCache(int position) {
+        if (imagesCache.size() >= 3) {
+            ArrayList<String> removeKeys = new ArrayList<String>();
+            for (Entry<String, Bitmap> entry : imagesCache.entrySet()) {
+                if (entry.getKey().equals(mUrlsList.get(position)) ||
+                    (position != 0 && entry.getKey().equals(mUrlsList.get(position-1))) ||
+                    (position != mUrlsList.size()-1 && entry.getKey().equals(mUrlsList.get(position+1)))) {
+                    continue;
+                }
+                Bitmap b = entry.getValue();
+                if (b != null) {
+                    b.recycle();
+                    b = null;
+                    removeKeys.add(entry.getKey());
+                }
+            }
+            for (int i=0; i<removeKeys.size(); i++) {
+                imagesCache.remove(removeKeys.get(i));
+            }
+        }
     }
 
     public static class MyViewPager extends ViewPager {
@@ -154,6 +177,7 @@ public class PhotoViewActivity extends Activity {
         @Override
         public View instantiateItem(ViewGroup container, int position) {
             PhotoView photoView = new PhotoView(container.getContext());
+            photoView.setTag(position);
             final Bitmap image = imagesCache.get(mUrlsList.get(position));
 
             if (image != null) {
@@ -169,14 +193,9 @@ public class PhotoViewActivity extends Activity {
             return photoView;
         }
         
-        @Override  
-        public int getItemPosition(Object object) {  
-            return POSITION_NONE;  
-        } 
-
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
+                container.removeView((View) object);
         }
 
         @Override
@@ -194,7 +213,12 @@ public class PhotoViewActivity extends Activity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == RELOAD_VIEW) {
-                mPagerAdapter.notifyDataSetChanged();
+                int tag = Integer.valueOf(msg.getData().getString("position")).intValue();
+                PhotoView view = (PhotoView)mViewPager.findViewWithTag(tag);
+                if (null != view) {
+                    view.setImageBitmap(imagesCache.get(mUrlsList.get(tag)));
+                    view.invalidate();
+                }
                 if (msg.getData().getString("position").equals(String.valueOf(mCurrentPosition))) {
                     mProgressBar.setVisibility(View.GONE);
                 }
@@ -204,7 +228,7 @@ public class PhotoViewActivity extends Activity {
             } else if (msg.what == ERASE_PROGRESS) {
                 mProgressBar.setVisibility(View.GONE);
                 mTextView.setText((mCurrentPosition+1) + " / " + mUrlsList.size());
-            }
+            } 
         }
     }
     
@@ -230,7 +254,7 @@ public class PhotoViewActivity extends Activity {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = false;
                 options.inSampleSize = 4;
-                bitmap = BitmapFactory.decodeStream(is, null, options); 
+                bitmap = BitmapFactory.decodeStream(is, null, options);
                 imagesCache.remove(params[0]);
                 imagesCache.put(params[0], bitmap);
                 is.close();  

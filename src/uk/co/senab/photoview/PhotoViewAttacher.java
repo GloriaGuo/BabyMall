@@ -133,7 +133,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, Vers
 	public PhotoViewAttacher(ImageView imageView) {
 		mImageView = new WeakReference<ImageView>(imageView);
 
-		imageView.setOnTouchListener(this);
+        imageView.setOnTouchListener(this);
 
 		mViewTreeObserver = imageView.getViewTreeObserver();
 		mViewTreeObserver.addOnGlobalLayoutListener(this);
