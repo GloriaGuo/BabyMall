@@ -51,7 +51,7 @@ public class NavigationActivity extends Activity
     private static final int UPDATE_WHAT_TITLE = 0;
     private static final int UPDATE_WHAT_UI_PAGE_START = 1;
     private static final int UPDATE_WHAT_UI_PAGE_FINISH = 2;
-    private static final int UPDATE_WHAT_UI_PAGE_TOUCH = 3;
+    private static final int UPDATE_WHAT_UI_PAGE_BADGE = 3;
     
     private static final String UPDATE_KEY_TITLE = "title";
     private static final String UPDATE_KEY_URL = "url";
@@ -120,7 +120,7 @@ public class NavigationActivity extends Activity
                     catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    NavigationActivity.this.onWebPageTouched(NavigationActivity.this.mCustomWebView.getWebView().getUrl());
+                    NavigationActivity.this.onWebPageUpdateBadge();
                 }
             }
             
@@ -265,9 +265,8 @@ public class NavigationActivity extends Activity
                 updateCartNumber(url);
                 mProgressBar.setVisibility(View.GONE);
             }
-            else if (msg.what == UPDATE_WHAT_UI_PAGE_TOUCH) {
-                String url = msg.getData().getString(UPDATE_KEY_URL);
-                Log.d(TAG, "Page Touched, url == " + url);
+            else if (msg.what == UPDATE_WHAT_UI_PAGE_BADGE) {
+                String url = NavigationActivity.this.mCustomWebView.getWebView().getUrl();
                 updateCartNumber(url);
             }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_START) {
@@ -321,13 +320,8 @@ public class NavigationActivity extends Activity
         this.myHandler.sendMessage(msg);
     }
 
-    public void onWebPageTouched(String url) {
-        Bundle b = new Bundle();
-        b.putString(UPDATE_KEY_URL, url);
-        Message msg = new Message();
-        msg.what = UPDATE_WHAT_UI_PAGE_TOUCH;
-        msg.setData(b);
-        this.myHandler.sendMessage(msg);
+    public void onWebPageUpdateBadge() {
+        this.myHandler.sendEmptyMessage(UPDATE_WHAT_UI_PAGE_BADGE);
     }
 
     @Override
