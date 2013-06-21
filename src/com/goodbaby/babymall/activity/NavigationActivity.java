@@ -16,7 +16,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -38,7 +37,7 @@ public class NavigationActivity extends Activity
     
     private MyHandler myHandler;
     private BadgeView mBadge;
-    private CustomWebView mCustomWebView;
+    private CustomWebView mCustomWebView = null;
     private ProgressBar mProgressBar;
     private LinearLayout mTabsLayout;
     private Button mTabButton0;
@@ -52,6 +51,7 @@ public class NavigationActivity extends Activity
     private static final int UPDATE_WHAT_TITLE = 0;
     private static final int UPDATE_WHAT_UI_PAGE_START = 1;
     private static final int UPDATE_WHAT_UI_PAGE_FINISH = 2;
+    private static final int UPDATE_WHAT_UI_PAGE_TOUCH = 3;
     
     private static final String UPDATE_KEY_TITLE = "title";
     private static final String UPDATE_KEY_URL = "url";
@@ -77,14 +77,6 @@ public class NavigationActivity extends Activity
 
         mCustomWebView = new CustomWebView();
         mCustomWebView.init(this, R.id.wv);
-        mCustomWebView.getWebView().setOnTouchListener(new View.OnTouchListener() {
-			
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				updateCartNumber();
-				return false;
-			}
-		});
         
         mTitleButtonLeft = (Button) findViewById(R.id.imageButtonLeft);
         mTitleButtonLeft.setOnClickListener(new OnClickListener() {
@@ -115,6 +107,24 @@ public class NavigationActivity extends Activity
                 mCustomWebView.updateUrl(mCustomWebView.TAB_CART);
             }
         });
+        
+
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                while(true) {
+                    try {
+                        Thread.sleep(1000);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    NavigationActivity.this.onWebPageTouched(NavigationActivity.this.mCustomWebView.getWebView().getUrl());
+                }
+            }
+            
+        }).start();
     }
     
     /* (non-Javadoc)
@@ -255,6 +265,11 @@ public class NavigationActivity extends Activity
                 updateCartNumber(url);
                 mProgressBar.setVisibility(View.GONE);
             }
+            else if (msg.what == UPDATE_WHAT_UI_PAGE_TOUCH) {
+                String url = msg.getData().getString(UPDATE_KEY_URL);
+                Log.d(TAG, "Page Touched, url == " + url);
+                updateCartNumber(url);
+            }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_START) {
                 // show progress bar
                 mProgressBar.setVisibility(View.VISIBLE);
@@ -302,6 +317,15 @@ public class NavigationActivity extends Activity
         b.putString(UPDATE_KEY_URL, url);
         Message msg = new Message();
         msg.what = UPDATE_WHAT_UI_PAGE_FINISH;
+        msg.setData(b);
+        this.myHandler.sendMessage(msg);
+    }
+
+    public void onWebPageTouched(String url) {
+        Bundle b = new Bundle();
+        b.putString(UPDATE_KEY_URL, url);
+        Message msg = new Message();
+        msg.what = UPDATE_WHAT_UI_PAGE_TOUCH;
         msg.setData(b);
         this.myHandler.sendMessage(msg);
     }
@@ -377,10 +401,6 @@ public class NavigationActivity extends Activity
 		else {
 		    mBadge.hide();
 		}
-	}
-	
-	private void updateCartNumber() {
-		updateCartNumber(this.mCustomWebView.getWebView().getUrl());
 	}
     
 }
