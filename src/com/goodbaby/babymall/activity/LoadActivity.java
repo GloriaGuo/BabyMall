@@ -5,6 +5,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,6 +41,11 @@ public class LoadActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        // check network status
+        if (!BabyMallApplication.isConnected()) {
+            showAlert(R.string.alert_network_not_available);
+            return;
+        }
         isAlive = true;
         if (null == mAdvertisementBitmap) {
             new Thread(new Runnable() {
@@ -92,19 +101,30 @@ public class LoadActivity extends Activity {
         return bitmap;
     }
     
-//    private void showAlert(int message) {
-//        AlertDialog mErrorDialog = new AlertDialog.Builder(this)
-//            .setMessage(message)
-//            .setCancelable(true)
-//            .setOnCancelListener(new OnCancelListener() {
-//                @Override
-//                public void onCancel(final DialogInterface dialog) {
-//                    finish();
-//                }
-//            }).show();
-//            
-//        mErrorDialog.setOwnerActivity(this);
-//    }
+    private void showAlert(int message) {
+        AlertDialog mErrorDialog = new AlertDialog.Builder(this)
+            .setMessage(message)
+            .setCancelable(true)
+            .setOnCancelListener(new OnCancelListener() {
+                @Override
+                public void onCancel(final DialogInterface dialog) {
+                    finish();
+                }
+            })
+            .setPositiveButton(
+                    R.string.ok_button,
+                    new OnClickListener() {
+
+                        @Override
+                        public void onClick(final DialogInterface dialog, 
+                                final int which) {
+                            finish();
+                        }
+                
+            }).show();
+            
+        mErrorDialog.setOwnerActivity(this);
+    }
     
     private class MyHandler extends Handler {
         public MyHandler() {
@@ -120,7 +140,6 @@ public class LoadActivity extends Activity {
             
             Intent intent;
             if (null == mAdvertisementBitmap) {
-//                showAlert(R.string.alert_advertisement_download_failed);
                 intent = new Intent(LoadActivity.this, NavigationActivity.class); 
             } else {
                 BabyMallApplication.saveBitmapToFile(

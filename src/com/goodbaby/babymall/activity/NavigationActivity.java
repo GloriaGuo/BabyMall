@@ -6,7 +6,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -17,7 +20,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.CookieManager;
 import android.widget.Button;
@@ -30,7 +32,7 @@ import com.goodbaby.babymall.R;
 import com.goodbaby.babymall.activity.CustomWebView.UIUpdateInterface;
 
 public class NavigationActivity extends Activity
-        implements UIUpdateInterface, OnClickListener{
+        implements UIUpdateInterface, View.OnClickListener{
 
     private static final String TAG = BabyMallApplication.getApplicationTag()
             + NavigationActivity.class.getSimpleName();
@@ -79,7 +81,7 @@ public class NavigationActivity extends Activity
         mCustomWebView.init(this, R.id.wv);
         
         mTitleButtonLeft = (Button) findViewById(R.id.imageButtonLeft);
-        mTitleButtonLeft.setOnClickListener(new OnClickListener() {
+        mTitleButtonLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCustomWebView.getWebView().goBackOrForward(mGoBackSteps);
@@ -116,8 +118,7 @@ public class NavigationActivity extends Activity
                 while(true) {
                     try {
                         Thread.sleep(1000);
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     NavigationActivity.this.onWebPageUpdateBadge();
@@ -262,7 +263,6 @@ public class NavigationActivity extends Activity
                     Log.e(TAG, "Invalie url : " + e.getMessage());
                 }
                 
-                updateCartNumber(url);
                 mProgressBar.setVisibility(View.GONE);
             }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_BADGE) {
@@ -358,20 +358,23 @@ public class NavigationActivity extends Activity
     
     private int getCartNumber(String url) {
         int cart_number = 0;
-        CookieManager cookieManager = CookieManager.getInstance();
-        String cookies = cookieManager.getCookie(url);
-        if (null != cookies && cookies.contains(BabyMallApplication.CART_NUMBER)) {
-            int start = cookies.indexOf(BabyMallApplication.CART_NUMBER) + 
-                    BabyMallApplication.CART_NUMBER.length() + 1;
-            int end = cookies.indexOf(';', start);
-            if (start > cookies.length() || end > cookies.length()
-                    || start < 0 || end <= 0 || start > end) {
-                cart_number = 0;
+        try {
+            CookieManager cookieManager = CookieManager.getInstance();
+            String cookies = cookieManager.getCookie(url);
+            if (null != cookies && cookies.contains(BabyMallApplication.CART_NUMBER)) {
+                int start = cookies.indexOf(BabyMallApplication.CART_NUMBER) + 
+                        BabyMallApplication.CART_NUMBER.length() + 1;
+                int end = cookies.indexOf(';', start);
+                if (start > cookies.length() || end > cookies.length()
+                        || start < 0 || end <= 0 || start > end) {
+                    cart_number = 0;
+                }
+                else {
+                    cart_number = Integer.parseInt(cookies.substring(start, end));
+                }
             }
-            else {
-                cart_number = Integer.parseInt(cookies.substring(start, end));
-                Log.d(TAG, "Have CART_NUMBER=" + cart_number);
-            }
+        } catch(Exception e) {
+            Log.e(TAG, "Get cookie failed : " + e.getMessage());
         }
         return cart_number;
     }
@@ -396,5 +399,26 @@ public class NavigationActivity extends Activity
 		    mBadge.hide();
 		}
 	}
+
+    @Override
+    public void onReceiveError(String message) {
+        AlertDialog mErrorDialog = new AlertDialog.Builder(this)
+            .setMessage(
+                    this.getResources().getString(R.string.alert_cannot_access) + message)
+            .setCancelable(true)
+            .setPositiveButton(
+                    R.string.ok_button,
+                    new OnClickListener() {
+
+                        @Override
+                        public void onClick(final DialogInterface dialog, 
+                                final int which) {
+                            
+                        }
+                
+            }).show();
+      
+        mErrorDialog.setOwnerActivity(this);
+    }
     
 }

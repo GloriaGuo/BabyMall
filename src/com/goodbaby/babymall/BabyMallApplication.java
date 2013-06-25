@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.Log;
 
@@ -85,6 +87,17 @@ public class BabyMallApplication extends Application {
         } catch (Exception e) {
             Log.e(mApplicationTag, "Remove the image file failed: " + e.getMessage());
         }
+    }
+    
+    /**
+     * Check if there is an active working network connection
+     * @return true if there is an active working network connection
+     */
+    public static boolean isConnected() {
+        ConnectivityManager manager = (ConnectivityManager)mContext.getSystemService(
+                    Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        return null != info && info.isConnected();
     }
 
 }

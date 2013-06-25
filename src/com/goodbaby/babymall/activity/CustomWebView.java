@@ -51,6 +51,7 @@ public class CustomWebView {
         public void onWebPageStart();
         public void onWebPageFinished(String url);
         public void onCanPaySet(String length);
+        public void onReceiveError(String message);
     }
     
     public void init(Context context, int webViewId) {
@@ -123,6 +124,7 @@ public class CustomWebView {
             @Override
             public void onReceivedError(WebView view, int errorCode,
                     String description, String failingUrl) {
+                ((UIUpdateInterface) mContext).onReceiveError(description);
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
 
