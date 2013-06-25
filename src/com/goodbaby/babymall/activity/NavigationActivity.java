@@ -144,6 +144,7 @@ public class NavigationActivity extends Activity
 
     @Override
 	protected void onDestroy() {
+        mSensorManager.unregisterListener(mSensorListener);
     	isRunUpdateBadge = false;
 		super.onDestroy();
 	}
@@ -376,7 +377,7 @@ public class NavigationActivity extends Activity
             if (null == cookies) {
             	return -1;
             }
-            Log.e(TAG, "cookies === " + cookies);
+//            Log.e(TAG, "cookies === " + cookies);
             if (null != cookies && cookies.contains(BabyMallApplication.CART_NUMBER)) {
                 int start = cookies.indexOf(BabyMallApplication.CART_NUMBER) + 
                         BabyMallApplication.CART_NUMBER.length() + 1;

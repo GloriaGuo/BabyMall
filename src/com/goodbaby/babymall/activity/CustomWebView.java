@@ -86,6 +86,7 @@ public class CustomWebView {
     private void initWebView() {
 
         mWebView.setWebViewClient(new WebViewClient(){  
+            private String mPreviousUrl = null;
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(TAG, "---> shouldOverrideUrlLoading url == " + url);
@@ -126,6 +127,10 @@ public class CustomWebView {
              */
             @Override
             public void onPageFinished(WebView view, String url) {
+                if (null != mPreviousUrl && url.equals(mPreviousUrl)) {
+                    return;
+                }
+                mPreviousUrl = url;
                 if (url.contains(mContext.getString(R.string.orderdetail_url_path))) {
                     view.loadUrl(
                             "javascript:window.APP_TITLE.setCanPay(" +
