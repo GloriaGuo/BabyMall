@@ -67,6 +67,9 @@ public class NavigationActivity extends Activity
     private int mGoBackSteps = -1;
     private String mCurrentUrl;
     
+    private Thread mUpdateBadgeThread;
+    private boolean isRunUpdateBadge = true;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,11 +115,11 @@ public class NavigationActivity extends Activity
         });
         
 
-        new Thread(new Runnable() {
+        mUpdateBadgeThread = new Thread(new Runnable() {
 
             @Override
             public void run() {
-                while(true) {
+                while(isRunUpdateBadge) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -126,7 +129,8 @@ public class NavigationActivity extends Activity
                 }
             }
             
-        }).start();
+        });
+        mUpdateBadgeThread.start();
     }
     
     /* (non-Javadoc)
@@ -138,7 +142,13 @@ public class NavigationActivity extends Activity
         super.onPause();
     }
 
-    /* (non-Javadoc)
+    @Override
+	protected void onDestroy() {
+    	isRunUpdateBadge = false;
+		super.onDestroy();
+	}
+
+	/* (non-Javadoc)
      * @see android.app.Activity#onResume()
      */
     @Override
