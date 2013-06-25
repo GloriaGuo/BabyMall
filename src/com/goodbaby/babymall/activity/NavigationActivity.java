@@ -65,6 +65,7 @@ public class NavigationActivity extends Activity
     private ShakeEventListener mSensorListener;
     
     private int mGoBackSteps = -1;
+    private String mCurrentUrl;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,14 +219,14 @@ public class NavigationActivity extends Activity
                 tv_title.setText(msg.getData().getString(UPDATE_KEY_TITLE));
             }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_FINISH) {
-                String url = msg.getData().getString(UPDATE_KEY_URL);
-                Log.d(TAG, "Page Finished, url == " + url);
+                mCurrentUrl = msg.getData().getString(UPDATE_KEY_URL);
+                Log.d(TAG, "Page Finished, url == " + mCurrentUrl);
                 try {
-                    String path = new URL(url).getPath();
+                    String path = new URL(mCurrentUrl).getPath();
                     mTitleButtonLeft.setVisibility(View.GONE);
                     mTitleButtonRight.setVisibility(View.GONE);
                     if (mCustomWebView.getWebView().canGoBack()) {
-                        if (NavigationActivity.this.canGoBack(url)) {
+                        if (NavigationActivity.this.canGoBack(mCurrentUrl)) {
                             mTitleButtonLeft.setVisibility(View.VISIBLE);
                         }
                     }
@@ -266,8 +267,9 @@ public class NavigationActivity extends Activity
                 mProgressBar.setVisibility(View.GONE);
             }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_BADGE) {
-                String url = NavigationActivity.this.mCustomWebView.getWebView().getUrl();
-                updateCartNumber(url);
+                if (null != mCurrentUrl) {
+                    updateCartNumber(mCurrentUrl);
+                }
             }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_START) {
                 // show progress bar
@@ -328,7 +330,7 @@ public class NavigationActivity extends Activity
     public boolean onKeyDown(int keyCode, KeyEvent event) 
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && mCustomWebView.getWebView().canGoBack()) {
-            if (canGoBack(mCustomWebView.getWebView().getUrl())) {
+            if (canGoBack(mCurrentUrl)) {
                 mCustomWebView.getWebView().goBackOrForward(mGoBackSteps);
                 mGoBackSteps = -1;
                 return true;
@@ -361,6 +363,7 @@ public class NavigationActivity extends Activity
         try {
             CookieManager cookieManager = CookieManager.getInstance();
             String cookies = cookieManager.getCookie(url);
+            Log.e(TAG, "cookies === " + cookies);
             if (null != cookies && cookies.contains(BabyMallApplication.CART_NUMBER)) {
                 int start = cookies.indexOf(BabyMallApplication.CART_NUMBER) + 
                         BabyMallApplication.CART_NUMBER.length() + 1;
