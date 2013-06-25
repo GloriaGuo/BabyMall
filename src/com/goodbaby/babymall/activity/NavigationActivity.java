@@ -363,6 +363,9 @@ public class NavigationActivity extends Activity
         try {
             CookieManager cookieManager = CookieManager.getInstance();
             String cookies = cookieManager.getCookie(url);
+            if (null == cookies) {
+            	return -1;
+            }
             Log.e(TAG, "cookies === " + cookies);
             if (null != cookies && cookies.contains(BabyMallApplication.CART_NUMBER)) {
                 int start = cookies.indexOf(BabyMallApplication.CART_NUMBER) + 
@@ -388,7 +391,11 @@ public class NavigationActivity extends Activity
     }
 
 	private void updateCartNumber(String url) {
-		mCartNumber = getCartNumber(url);
+		int newCartNumber = getCartNumber(url);
+		if (newCartNumber < 0) {
+			return;
+		}
+		mCartNumber = newCartNumber;
 		if (mCartNumber > 0) {
 		    String cartText = mCartNumber >= 10 ? "N" : String.valueOf(mCartNumber);
 		    mBadge.setText(cartText);
