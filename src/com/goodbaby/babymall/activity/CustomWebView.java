@@ -1,11 +1,16 @@
 package com.goodbaby.babymall.activity;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.webkit.HttpAuthHandler;
@@ -84,6 +89,19 @@ public class CustomWebView {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(TAG, "---> shouldOverrideUrlLoading url == " + url);
+                try {
+                    URL formatUrl = new URL(url);
+                    if (formatUrl.getHost().substring(0, 3).equals("www")) {
+                        Intent intent = new Intent();
+                        intent.setAction("android.intent.action.VIEW");
+                        Uri content_url = Uri.parse(url);
+                        intent.setData(content_url);
+                        mContext.startActivity(intent);
+                        return true;
+                    } 
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "Format url failed: " + e.getMessage());
+                }
                 if (MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("jpg") ||
                     MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("png")) {
                     mClickedUrl = url;
