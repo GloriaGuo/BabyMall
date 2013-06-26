@@ -114,7 +114,7 @@ public class CustomWebView {
                     view.loadUrl(url);
                 }
                 
-                return true;       
+                return false;       
             }
             
             /* (non-Javadoc)
@@ -130,10 +130,11 @@ public class CustomWebView {
              */
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (null != mPreviousUrl && url.equals(mPreviousUrl)) {
-                    return;
-                }
-                mPreviousUrl = url;
+                super.onPageFinished(view, url);
+//                if (null != mPreviousUrl && url.equals(mPreviousUrl)) {
+//                    return;
+//                }
+//                mPreviousUrl = url;
                 if (url.contains(mContext.getString(R.string.orderdetail_url_path))) {
                     view.loadUrl(
                             "javascript:window.APP_TITLE.setCanPay(" +
@@ -154,7 +155,6 @@ public class CustomWebView {
 	                Log.e(TAG, "url === " + url);
 	                Log.e(TAG, "cookies === " + cookies);
                 }
-                super.onPageFinished(view, url);
             }
 
             /* (non-Javadoc)
@@ -314,6 +314,10 @@ public class CustomWebView {
     
     public void handleRightButton() {
         mWebView.loadUrl("javascript:window.barButtonAction()");
+    }
+    
+    public void goBack() {
+        mWebView.loadUrl("javascript:window.history.back()");
     }
     
 }
