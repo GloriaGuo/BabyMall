@@ -177,6 +177,8 @@ public class NavigationActivity extends Activity
         
         mBadge = new BadgeView(this, mTabButton3);
         mBadge.setBackgroundResource(R.drawable.badge);
+        mBadge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+        mBadge.setGravity(Gravity.CENTER);
     }
     
     @Override
@@ -409,11 +411,7 @@ public class NavigationActivity extends Activity
 		mCartNumber = newCartNumber;
 		if (mCartNumber > 0) {
 		    String cartText = mCartNumber >= 10 ? "N" : String.valueOf(mCartNumber);
-		    mBadge.setText(cartText);
-		    mBadge.setBackgroundResource(R.drawable.badge);
-		    mBadge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-		    mBadge.setBadgeMargin(mBadge.dipToPixels(11), mBadge.dipToPixels(10));
-		    mBadge.setGravity(Gravity.CENTER);
+            mBadge.setText(cartText);
 		    mBadge.show();
 		}
 		else {

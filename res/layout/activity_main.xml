@@ -85,15 +85,17 @@
 	            android:background="@android:color/transparent"
 		        />
 	    </LinearLayout>
-		<LinearLayout
+	    <LinearLayout
 	    	android:layout_height="fill_parent"
             android:layout_width="0dip"
 	        android:layout_weight="1"
+	        android:gravity="center"
 	        >
 	        <Button
 	            android:id="@+id/tab_button_3"
+	            android:layout_marginTop="5dp"
 	            android:layout_height="fill_parent"
-	            android:layout_width="fill_parent"
+	            android:layout_width="80dp"
 	            android:background="@android:color/transparent"
 	            />
 	    </LinearLayout>
