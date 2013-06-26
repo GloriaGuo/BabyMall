@@ -2,6 +2,8 @@ package com.goodbaby.babymall.activity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,6 +15,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
@@ -138,6 +141,19 @@ public class CustomWebView {
                 }
                 view.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
                 ((UIUpdateInterface) mContext).onWebPageFinished(url);
+                
+
+                CookieManager cookieManager = CookieManager.getInstance();
+                String cookies = cookieManager.getCookie(url);
+                if (null != cookies) {
+	                Pattern pattern = Pattern.compile("http://m.haohaizi.com/product-" + "[0-9]{1,}\\.html#appready");
+	                Matcher matcher = pattern.matcher(url);
+	                if (matcher.matches()) {
+	                	cookieManager.setCookie(url, "LAST_URL=" + url);
+	                }
+	                Log.e(TAG, "url === " + url);
+	                Log.e(TAG, "cookies === " + cookies);
+                }
                 super.onPageFinished(view, url);
             }
 
