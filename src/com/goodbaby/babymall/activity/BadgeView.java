@@ -457,7 +457,7 @@ public class BadgeView extends TextView {
 		badgeBg = getDefaultBackground();
 	}
 	
-	private int dipToPixels(int dip) {
+	public int dipToPixels(int dip) {
 		Resources r = getResources();
 		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, r.getDisplayMetrics());
 		return (int) px;

@@ -412,7 +412,7 @@ public class NavigationActivity extends Activity
 		    mBadge.setText(cartText);
 		    mBadge.setBackgroundResource(R.drawable.badge);
 		    mBadge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-		    mBadge.setBadgeMargin(25, 23);
+		    mBadge.setBadgeMargin(mBadge.dipToPixels(11), mBadge.dipToPixels(10));
 		    mBadge.setGravity(Gravity.CENTER);
 		    mBadge.show();
 		}
