@@ -2,8 +2,6 @@ package com.goodbaby.babymall.activity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,7 +13,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
-import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
@@ -89,7 +86,6 @@ public class CustomWebView {
     private void initWebView() {
 
         mWebView.setWebViewClient(new WebViewClient(){  
-            private String mPreviousUrl = null;
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(TAG, "---> shouldOverrideUrlLoading url == " + url);
@@ -114,7 +110,7 @@ public class CustomWebView {
                     view.loadUrl(url);
                 }
                 
-                return false;       
+                return true;       
             }
             
             /* (non-Javadoc)
@@ -131,10 +127,6 @@ public class CustomWebView {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-//                if (null != mPreviousUrl && url.equals(mPreviousUrl)) {
-//                    return;
-//                }
-//                mPreviousUrl = url;
                 if (url.contains(mContext.getString(R.string.orderdetail_url_path))) {
                     view.loadUrl(
                             "javascript:window.APP_TITLE.setCanPay(" +
@@ -142,19 +134,6 @@ public class CustomWebView {
                 }
                 view.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
                 ((UIUpdateInterface) mContext).onWebPageFinished(url);
-                
-
-                CookieManager cookieManager = CookieManager.getInstance();
-                String cookies = cookieManager.getCookie(url);
-                if (null != cookies) {
-	                Pattern pattern = Pattern.compile("http://m.haohaizi.com/product-" + "[0-9]{1,}\\.html#appready");
-	                Matcher matcher = pattern.matcher(url);
-	                if (matcher.matches()) {
-	                	cookieManager.setCookie(url, "LAST_URL=" + url);
-	                }
-	                Log.e(TAG, "url === " + url);
-	                Log.e(TAG, "cookies === " + cookies);
-                }
             }
 
             /* (non-Javadoc)
@@ -314,10 +293,6 @@ public class CustomWebView {
     
     public void handleRightButton() {
         mWebView.loadUrl("javascript:window.barButtonAction()");
-    }
-    
-    public void goBack() {
-        mWebView.loadUrl("javascript:window.history.back()");
     }
     
 }

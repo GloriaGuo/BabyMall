@@ -88,9 +88,8 @@ public class NavigationActivity extends Activity
         mTitleButtonLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mCustomWebView.getWebView().goBackOrForward(mGoBackSteps);
-//                mGoBackSteps = -1;
-                mCustomWebView.goBack();
+                mCustomWebView.getWebView().goBackOrForward(mGoBackSteps);
+                mGoBackSteps = -1;
             }
         });
         
@@ -343,9 +342,8 @@ public class NavigationActivity extends Activity
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && mCustomWebView.getWebView().canGoBack()) {
             if (canGoBack(mCurrentUrl)) {
-//                mCustomWebView.getWebView().goBackOrForward(mGoBackSteps);
-//                mGoBackSteps = -1;
-                mCustomWebView.goBack();
+                mCustomWebView.getWebView().goBackOrForward(mGoBackSteps);
+                mGoBackSteps = -1;
                 return true;
             }
         }
