@@ -91,7 +91,7 @@ public class CustomWebView {
                 Log.d(TAG, "---> shouldOverrideUrlLoading url == " + url);
                 try {
                     URL formatUrl = new URL(url);
-                    if (formatUrl.getHost().substring(0, 3).equals("www")) {
+                    if (!formatUrl.getHost().substring(0, 2).equals("m.")) {
                         Intent intent = new Intent();
                         intent.setAction("android.intent.action.VIEW");
                         Uri content_url = Uri.parse(url);
