@@ -421,6 +421,9 @@ public class NavigationActivity extends Activity
 
     @Override
     public void onReceiveError(String message) {
+        if (!isRunUpdateBadge) {
+            return;
+        }
         AlertDialog mErrorDialog = new AlertDialog.Builder(this)
             .setMessage(
                     this.getResources().getString(R.string.alert_cannot_access) + message)

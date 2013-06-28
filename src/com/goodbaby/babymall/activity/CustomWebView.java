@@ -89,24 +89,25 @@ public class CustomWebView {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(TAG, "---> shouldOverrideUrlLoading url == " + url);
-                try {
-                    URL formatUrl = new URL(url);
-                    if (!formatUrl.getHost().substring(0, 2).equals("m.")) {
-                        Intent intent = new Intent();
-                        intent.setAction("android.intent.action.VIEW");
-                        Uri content_url = Uri.parse(url);
-                        intent.setData(content_url);
-                        mContext.startActivity(intent);
-                        return true;
-                    } 
-                } catch (MalformedURLException e) {
-                    Log.e(TAG, "Format url failed: " + e.getMessage());
-                }
+                
                 if (MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("jpg") ||
                     MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("png")) {
                     mClickedUrl = url;
                     view.loadUrl("javascript:window.APP_TITLE.getGalleryList(hhz_gallery)");
                 } else {
+                    try {
+                        URL formatUrl = new URL(url);
+                        if (!formatUrl.getHost().substring(0, 2).equals("m.")) {
+                            Intent intent = new Intent();
+                            intent.setAction("android.intent.action.VIEW");
+                            Uri content_url = Uri.parse(url);
+                            intent.setData(content_url);
+                            mContext.startActivity(intent);
+                            return true;
+                        } 
+                    } catch (MalformedURLException e) {
+                        Log.e(TAG, "Format url failed: " + e.getMessage());
+                    }
                     view.loadUrl(url);
                 }
                 
