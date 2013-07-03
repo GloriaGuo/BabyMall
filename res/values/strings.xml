@@ -9,7 +9,7 @@
     <string name="nav_button_right_pay">付款</string>
     <string name="nav_button_right_checkout">结算</string>
     <string name="nav_button_right_add">添加</string>
-    <string name="alert_cannot_access">访问出错：</string>
+    <string name="alert_cannot_access">访问出错</string>
     <string name="ok_button">确定</string>
     
 </resources>

@@ -426,7 +426,7 @@ public class NavigationActivity extends Activity
         }
         AlertDialog mErrorDialog = new AlertDialog.Builder(this)
             .setMessage(
-                    this.getResources().getString(R.string.alert_cannot_access) + message)
+                    this.getResources().getString(R.string.alert_cannot_access))
             .setCancelable(true)
             .setPositiveButton(
                     R.string.ok_button,
