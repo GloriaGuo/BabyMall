@@ -230,6 +230,8 @@ public class NavigationActivity extends Activity
             if (msg.what == UPDATE_WHAT_TITLE) {
                 TextView tv_title = (TextView) findViewById(R.id.navTitle);
                 tv_title.setText(msg.getData().getString(UPDATE_KEY_TITLE));
+
+                mProgressBar.setVisibility(View.GONE);
             }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_FINISH) {
                 mCurrentUrl = msg.getData().getString(UPDATE_KEY_URL);
@@ -276,8 +278,6 @@ public class NavigationActivity extends Activity
                 } catch (MalformedURLException e) {
                     Log.e(TAG, "Invalie url : " + e.getMessage());
                 }
-                
-                mProgressBar.setVisibility(View.GONE);
             }
             else if (msg.what == UPDATE_WHAT_UI_PAGE_BADGE) {
                 if (null != mCurrentUrl) {
