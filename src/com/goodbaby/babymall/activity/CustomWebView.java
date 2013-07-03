@@ -94,6 +94,7 @@ public class CustomWebView {
                     MimeTypeMap.getFileExtensionFromUrl(url).equalsIgnoreCase("png")) {
                     mClickedUrl = url;
                     view.loadUrl("javascript:window.APP_TITLE.getGalleryList(hhz_gallery)");
+                    return true;
                 } else {
                     try {
                         URL formatUrl = new URL(url);
@@ -108,10 +109,9 @@ public class CustomWebView {
                     } catch (MalformedURLException e) {
                         Log.e(TAG, "Format url failed: " + e.getMessage());
                     }
-                    view.loadUrl(url);
                 }
                 
-                return true;       
+                return false;       
             }
             
             /* (non-Javadoc)

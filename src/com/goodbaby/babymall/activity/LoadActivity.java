@@ -87,7 +87,7 @@ public class LoadActivity extends Activity {
             HttpURLConnection conn;
             conn = (HttpURLConnection)mRemoteUrl.openConnection();
             
-            conn.setConnectTimeout(5000);
+            conn.setConnectTimeout(1000);
             conn.setDoInput(true);
             conn.setUseCaches(false);
 
