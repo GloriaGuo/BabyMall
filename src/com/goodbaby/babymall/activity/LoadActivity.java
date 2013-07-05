@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import com.goodbaby.babymall.BabyMallApplication;
@@ -23,8 +22,6 @@ import com.goodbaby.babymall.R;
 public class LoadActivity extends Activity {
     
     private static final String TAG = "LoadActivity";
-        
-    private MyHandler myHandler;
     
     private Boolean isAlive = true;
     
@@ -34,8 +31,6 @@ public class LoadActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
         setContentView(R.layout.load);  
-        
-        myHandler = new MyHandler();
     }
     
     @Override
@@ -54,13 +49,29 @@ public class LoadActivity extends Activity {
                 public void run() {
                     // Download the advertisement icon
                     mAdvertisementBitmap = getHttpBitmap(getResources().getString(R.string.advertisement));
-                    LoadActivity.this.myHandler.sendEmptyMessage(0);
                 }
                 
             }).start();
-        } else {
-            myHandler.sendEmptyMessage(0);
-        }
+        } 
+        
+        new Handler().postDelayed(new Runnable(){  
+            @Override  
+            public void run() {
+                if (!isAlive) {
+                    return;
+                }
+                Intent intent;
+                if (null == mAdvertisementBitmap) {
+                    intent = new Intent(LoadActivity.this, NavigationActivity.class); 
+                } else {
+                    BabyMallApplication.saveBitmapToFile(
+                            BabyMallApplication.ADVERTISEMENT_IMAGE, mAdvertisementBitmap);
+                    intent = new Intent(LoadActivity.this, AdvertisementActivity.class); 
+                }
+                LoadActivity.this.startActivity(intent);  
+                LoadActivity.this.finish();  
+            }  
+        }, 1000);
     }
     
     @Override
@@ -124,31 +135,6 @@ public class LoadActivity extends Activity {
             }).show();
             
         mErrorDialog.setOwnerActivity(this);
-    }
-    
-    private class MyHandler extends Handler {
-        public MyHandler() {
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            
-            if (!isAlive) {
-                return;
-            }
-            
-            Intent intent;
-            if (null == mAdvertisementBitmap) {
-                intent = new Intent(LoadActivity.this, NavigationActivity.class); 
-            } else {
-                BabyMallApplication.saveBitmapToFile(
-                        BabyMallApplication.ADVERTISEMENT_IMAGE, mAdvertisementBitmap);
-                intent = new Intent(LoadActivity.this, AdvertisementActivity.class); 
-            }
-            LoadActivity.this.startActivity(intent);  
-            LoadActivity.this.finish();
-        }
     }
     
 }
