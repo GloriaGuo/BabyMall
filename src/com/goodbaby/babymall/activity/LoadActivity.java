@@ -36,6 +36,8 @@ public class LoadActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
         setContentView(R.layout.load);  
+        Log.d(TAG, "----> Register app... isRegisted == " + 
+            BabyMallApplication.getConfiguration().getIsRegisted());
         if (!BabyMallApplication.getConfiguration().getIsRegisted()) {
             registerApp();
         }
@@ -47,10 +49,9 @@ public class LoadActivity extends Activity {
             @Override
             public void run() {
                 String url = LoadActivity.this.getResources().getString(R.string.register_url) +
-                        "appId=" + LoadActivity.this.getResources().getString(R.string.app_id) +
+                        "&appId=" + LoadActivity.this.getResources().getString(R.string.app_id) +
                         "&udid=" + BabyMallApplication.getMAC() +
                         "&source=" + LoadActivity.this.getResources().getString(R.string.source);
-                Log.d(TAG, "----> Register app...url == " + url);
                 HttpURLConnection conn = null;
                 try {
                     URL registerUrl = new URL(url);
@@ -59,8 +60,6 @@ public class LoadActivity extends Activity {
                     conn.setConnectTimeout(5000);
                     conn.setDoInput(true);
                     conn.setUseCaches(false);
-                    Log.d(TAG, "----> getResponseCode == " + conn.getResponseCode());
-
                     if (conn.getResponseCode() == 200) {
                         InputStream is = conn.getInputStream();
                         StringBuffer sBuffer = new StringBuffer();  
@@ -68,10 +67,10 @@ public class LoadActivity extends Activity {
                         for (int n; (n = is.read(buf)) != -1;) {  
                             sBuffer.append(new String(buf, 0, n, "utf-8"));  
                         }  
-                        Log.d(TAG, "----> response == " + sBuffer.toString());
 
                         JSONObject object = new JSONObject(sBuffer.toString()); 
-                        BabyMallApplication.getConfiguration().setIsRegisted(object.getBoolean("success"));
+                        BabyMallApplication.getConfiguration().setIsRegisted(
+                                object.getString("success").equals("true") ? true : false);
                         is.close();
                     }
                     

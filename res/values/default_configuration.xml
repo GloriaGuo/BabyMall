@@ -28,7 +28,7 @@
     <string name="order_done_path">"/order-"</string>
     <string name="payment_path">"/site/paycenter-dopayment-order.html"</string>
     
-    <string name="register_url">http://www.haohaizi.com/statiscs/getUser.html?</string>
+    <string name="register_url">http://www.haohaizi.com/statiscs/getUser.html?from=mobile</string>
     <string name="app_id">gbstore_android</string>
     <string name="source">gb_android</string>
     
