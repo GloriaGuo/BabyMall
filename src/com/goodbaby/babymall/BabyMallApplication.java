@@ -8,6 +8,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.util.Log;
 
@@ -29,6 +31,10 @@ public class BabyMallApplication extends Application {
      * The application context
      */
     protected static Context mContext = null;
+    /**
+     * Application configuration
+     */
+    private static BabyMallConfiguration mConfiguration = null;
     
     /**
      * @return the application tag (used in application logs)
@@ -58,6 +64,8 @@ public class BabyMallApplication extends Application {
         
         File dir = new File(BabyMallApplication.EXTERNAL_STORAGE_PATH);
         dir.mkdirs();
+        
+        mConfiguration = new BabyMallConfiguration(mContext);
     }
     
     public static void saveBitmapToFile(String name, Bitmap bitmap) {      
@@ -100,4 +108,20 @@ public class BabyMallApplication extends Application {
         return null != info && info.isConnected();
     }
 
+    /**
+     * Gets the MAC when there's no available IMEI
+     */
+    public static String getMAC() {
+        WifiManager wifi = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);  
+        WifiInfo info = wifi.getConnectionInfo();  
+        return info.getMacAddress().replace(":", "");
+    }
+    
+    /**
+     * Gets the configuration
+     * @return the current configuration
+     */
+    public static BabyMallConfiguration getConfiguration() {
+        return mConfiguration;
+    }
 }

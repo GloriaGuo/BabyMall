@@ -1,8 +1,13 @@
 package com.goodbaby.babymall.activity;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,6 +36,59 @@ public class LoadActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
         setContentView(R.layout.load);  
+        if (!BabyMallApplication.getConfiguration().getIsRegisted()) {
+            registerApp();
+        }
+    }
+
+    private void registerApp() {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                String url = LoadActivity.this.getResources().getString(R.string.register_url) +
+                        "appId=" + LoadActivity.this.getResources().getString(R.string.app_id) +
+                        "&udid=" + BabyMallApplication.getMAC() +
+                        "&source=" + LoadActivity.this.getResources().getString(R.string.source);
+                Log.d(TAG, "----> Register app...url == " + url);
+                HttpURLConnection conn = null;
+                try {
+                    URL registerUrl = new URL(url);
+                    conn = (HttpURLConnection)registerUrl.openConnection();
+                    
+                    conn.setConnectTimeout(5000);
+                    conn.setDoInput(true);
+                    conn.setUseCaches(false);
+                    Log.d(TAG, "----> getResponseCode == " + conn.getResponseCode());
+
+                    if (conn.getResponseCode() == 200) {
+                        InputStream is = conn.getInputStream();
+                        StringBuffer sBuffer = new StringBuffer();  
+                        byte[] buf = new byte[1024];  
+                        for (int n; (n = is.read(buf)) != -1;) {  
+                            sBuffer.append(new String(buf, 0, n, "utf-8"));  
+                        }  
+                        Log.d(TAG, "----> response == " + sBuffer.toString());
+
+                        JSONObject object = new JSONObject(sBuffer.toString()); 
+                        BabyMallApplication.getConfiguration().setIsRegisted(object.getBoolean("success"));
+                        is.close();
+                    }
+                    
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "Invalid URL : " + e.getMessage());
+                } catch (IOException e) {
+                    Log.e(TAG, "Register app failed : " + e.getMessage());
+                } catch (JSONException e) {
+                    Log.e(TAG, "Invalid json string : " + e.getMessage());
+                }
+                if (null != conn) {
+                    conn.disconnect();
+                }
+                    
+            }
+            
+        }).start();
     }
     
     @Override
