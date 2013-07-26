@@ -68,7 +68,9 @@ public class NavigationActivity extends Activity
     private String mCurrentUrl;
     
     private Thread mUpdateBadgeThread;
-    private boolean isRunUpdateBadge = true;
+    private boolean mIsRunUpdateBadge = true;
+    
+    private boolean mIsShake = true;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +111,10 @@ public class NavigationActivity extends Activity
         mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
 
             public void onShake() {
-                mTabsLayout.setBackgroundResource(R.drawable.tabbar_3);
-                mCustomWebView.updateUrl(mCustomWebView.TAB_CART);
+                if (mIsShake) {
+                    mTabsLayout.setBackgroundResource(R.drawable.tabbar_3);
+                    mCustomWebView.updateUrl(mCustomWebView.TAB_CART);
+                }
             }
         });
         
@@ -119,7 +123,7 @@ public class NavigationActivity extends Activity
 
             @Override
             public void run() {
-                while(isRunUpdateBadge) {
+                while(mIsRunUpdateBadge) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -145,7 +149,7 @@ public class NavigationActivity extends Activity
     @Override
 	protected void onDestroy() {
         mSensorManager.unregisterListener(mSensorListener);
-    	isRunUpdateBadge = false;
+    	mIsRunUpdateBadge = false;
 		super.onDestroy();
 	}
 
@@ -218,6 +222,12 @@ public class NavigationActivity extends Activity
         msg.what = UPDATE_WHAT_TITLE;
         msg.setData(b);
         this.myHandler.sendMessage(msg);
+    }
+    
+    @Override
+    public void onShakeUpdate(boolean isShakeEnable) {
+        mIsShake = isShakeEnable;
+        Log.e(TAG, "Shake status=" + isShakeEnable);
     }
 
     private class MyHandler extends Handler {
@@ -421,7 +431,7 @@ public class NavigationActivity extends Activity
 
     @Override
     public void onReceiveError(String message) {
-        if (!isRunUpdateBadge) {
+        if (!mIsRunUpdateBadge) {
             return;
         }
         AlertDialog mErrorDialog = new AlertDialog.Builder(this)

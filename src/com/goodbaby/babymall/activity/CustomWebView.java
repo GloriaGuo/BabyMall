@@ -57,6 +57,7 @@ public class CustomWebView {
         public void onWebPageFinished(String url);
         public void onCanPaySet(String length);
         public void onReceiveError(String message);
+        public void onShakeUpdate(boolean isShakeEnable);
     }
     
     public void init(Context context, int webViewId) {
@@ -134,6 +135,7 @@ public class CustomWebView {
                             "document.getElementsByClassName('order-detail-gotopay').length)");
                 }
                 view.loadUrl("javascript:window.APP_TITLE.getAppTitle(app_title)");
+                view.loadUrl("javascript:window.APP_TITLE.getWindowShakable(isDisableShake)");
                 ((UIUpdateInterface) mContext).onWebPageFinished(url);
             }
 
@@ -290,6 +292,10 @@ public class CustomWebView {
             ((UIUpdateInterface)mContext).onCanPaySet(length);
         }
 
+        @JavascriptInterface
+        public void getWindowShakable(boolean isShakeEnable) {
+            ((UIUpdateInterface)mContext).onShakeUpdate(isShakeEnable);
+        }
     }
     
     public void handleRightButton() {
